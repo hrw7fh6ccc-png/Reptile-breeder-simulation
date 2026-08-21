@@ -2207,3 +2207,1051 @@ updateAnimalAges();
 updateEggs();
 
 updateUI();
+
+
+
+
+// ============================================
+// REPTILE BREEDING SIMULATION
+// PART 7 - RECESSIVE & HIDDEN GENETICS
+// ============================================
+
+
+// ============================================
+// GENETIC TYPES
+// ============================================
+
+const geneticTypes = {
+
+    "Ball Python": {
+
+        Albino: {
+            type: "recessive",
+            gene: "albino",
+            normal: "A",
+            mutated: "a"
+        },
+
+        Clown: {
+            type: "recessive",
+            gene: "clown",
+            normal: "C",
+            mutated: "c"
+        },
+
+        Pied: {
+            type: "recessive",
+            gene: "pied",
+            normal: "P",
+            mutated: "p"
+        },
+
+        Pastel: {
+            type: "dominant",
+            gene: "pastel",
+            normal: "P",
+            mutated: "p"
+        }
+
+    },
+
+
+    "Leopard Gecko": {
+
+        Albino: {
+            type: "recessive",
+            gene: "albino",
+            normal: "A",
+            mutated: "a"
+        },
+
+        Tremper: {
+            type: "recessive",
+            gene: "tremper",
+            normal: "T",
+            mutated: "t"
+        },
+
+        Eclipse: {
+            type: "recessive",
+            gene: "eclipse",
+            normal: "E",
+            mutated: "e"
+        }
+
+    },
+
+
+    "Corn Snake": {
+
+        Amelanistic: {
+            type: "recessive",
+            gene: "amel",
+            normal: "A",
+            mutated: "a"
+        },
+
+        Anery: {
+            type: "recessive",
+            gene: "anery",
+            normal: "N",
+            mutated: "n"
+        },
+
+        Motley: {
+            type: "recessive",
+            gene: "motley",
+            normal: "M",
+            mutated: "m"
+        }
+
+    }
+
+};
+
+
+// ============================================
+// GENERATE RANDOM HIDDEN GENES
+// ============================================
+
+function generateHiddenGenes(
+    species,
+    visibleMorph
+) {
+
+    const result = {};
+
+    const speciesGenes =
+        geneticTypes[species];
+
+    if (!speciesGenes)
+        return result;
+
+
+    Object.keys(
+        speciesGenes
+    ).forEach(
+        morph => {
+
+            const data =
+                speciesGenes[morph];
+
+
+            const gene =
+                data.gene;
+
+
+            // Already visible morph
+            if (
+                morph === visibleMorph
+            ) {
+
+                if (
+                    data.type ===
+                    "recessive"
+                ) {
+
+                    result[gene] = [
+                        data.mutated,
+                        data.mutated
+                    ];
+
+                }
+                else {
+
+                    result[gene] = [
+                        data.mutated,
+                        data.normal
+                    ];
+
+                }
+
+                return;
+
+            }
+
+
+            // Small chance animal carries
+            // a hidden recessive gene
+
+            if (
+                data.type ===
+                "recessive"
+            ) {
+
+                const roll =
+                    Math.random();
+
+                if (
+                    roll < 0.15
+                ) {
+
+                    result[gene] = [
+                        data.mutated,
+                        data.normal
+                    ];
+
+                }
+                else {
+
+                    result[gene] = [
+                        data.normal,
+                        data.normal
+                    ];
+
+                }
+
+            }
+
+            else {
+
+                result[gene] = [
+                    data.normal,
+                    data.normal
+                ];
+
+            }
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+// ============================================
+// CHECK IF HET
+// ============================================
+
+function isHet(
+    genes,
+    gene,
+    mutated
+) {
+
+    if (!genes)
+        return false;
+
+
+    const pair =
+        genes[gene];
+
+
+    if (!pair)
+        return false;
+
+
+    return (
+        pair.includes(mutated) &&
+        pair.includes(
+            pair.find(
+                allele =>
+                    allele !== mutated
+            )
+        )
+    );
+
+}
+
+
+// ============================================
+// CHECK HOMO RECESSIVE
+// ============================================
+
+function isHomozygousRecessive(
+    genes,
+    gene,
+    mutated
+) {
+
+    if (!genes)
+        return false;
+
+
+    const pair =
+        genes[gene];
+
+
+    if (!pair)
+        return false;
+
+
+    return (
+        pair[0] === mutated &&
+        pair[1] === mutated
+    );
+
+}
+
+
+// ============================================
+// GENETIC STATUS
+// ============================================
+
+function getGeneStatus(
+    animal,
+    morph
+) {
+
+    const data =
+        geneticTypes[
+            animal.species
+        ]?.[morph];
+
+
+    if (!data)
+        return "Unknown";
+
+
+    const genes =
+        animal.genes || {};
+
+
+    const pair =
+        genes[
+            data.gene
+        ];
+
+
+    if (!pair)
+        return "Normal";
+
+
+    if (
+        data.type ===
+        "recessive"
+    ) {
+
+        if (
+            pair[0] ===
+            data.mutated &&
+            pair[1] ===
+            data.mutated
+        ) {
+
+            return "Visual";
+
+        }
+
+
+        if (
+            pair.includes(
+                data.mutated
+            )
+        ) {
+
+            return "Het";
+
+        }
+
+
+        return "Normal";
+
+    }
+
+
+    if (
+        data.type ===
+        "dominant"
+    ) {
+
+        if (
+            pair.includes(
+                data.mutated
+            )
+        ) {
+
+            return "Visual";
+
+        }
+
+        return "Normal";
+
+    }
+
+
+    return "Unknown";
+
+}
+
+
+// ============================================
+// GET HIDDEN GENES
+// ============================================
+
+function getHiddenGenes(
+    animal
+) {
+
+    const hidden = [];
+
+    const species =
+        geneticTypes[
+            animal.species
+        ];
+
+    if (!species)
+        return hidden;
+
+
+    Object.keys(
+        species
+    ).forEach(
+        morph => {
+
+            const data =
+                species[morph];
+
+
+            if (
+                data.type !==
+                "recessive"
+            )
+                return;
+
+
+            const status =
+                getGeneStatus(
+                    animal,
+                    morph
+                );
+
+
+            if (
+                status ===
+                "Het"
+            ) {
+
+                hidden.push(
+                    morph
+                );
+
+            }
+
+        }
+    );
+
+
+    return hidden;
+
+}
+
+
+// ============================================
+// IMPROVE ANIMAL GENETICS
+// ============================================
+
+function upgradeAnimalGenetics(
+    animal
+) {
+
+    const hiddenGenes =
+        generateHiddenGenes(
+            animal.species,
+            animal.morph
+        );
+
+
+    if (!animal.genes)
+        animal.genes = {};
+
+
+    Object.keys(
+        hiddenGenes
+    ).forEach(
+        gene => {
+
+            if (
+                !animal.genes[gene]
+            ) {
+
+                animal.genes[gene] =
+                    hiddenGenes[gene];
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================
+// GET PARENT ALLELE
+// ============================================
+
+function getRandomAllele(
+    animal,
+    gene
+) {
+
+    if (
+        !animal.genes ||
+        !animal.genes[gene]
+    ) {
+
+        return null;
+
+    }
+
+
+    const pair =
+        animal.genes[gene];
+
+
+    return pair[
+        Math.floor(
+            Math.random() * 2
+        )
+    ];
+
+}
+
+
+// ============================================
+// MAKE BABY GENE
+// ============================================
+
+function makeBabyGene(
+    father,
+    mother,
+    gene
+) {
+
+    const fatherAllele =
+        getRandomAllele(
+            father,
+            gene
+        );
+
+
+    const motherAllele =
+        getRandomAllele(
+            mother,
+            gene
+        );
+
+
+    if (
+        fatherAllele === null ||
+        motherAllele === null
+    ) {
+
+        return null;
+
+    }
+
+
+    return [
+        fatherAllele,
+        motherAllele
+    ];
+
+}
+
+
+// ============================================
+// CALCULATE BABY GENES
+// ============================================
+
+function calculateBabyGenetics(
+    father,
+    mother
+) {
+
+    const babyGenes = {};
+
+
+    const allGenes =
+        new Set([
+            ...Object.keys(
+                father.genes || {}
+            ),
+
+            ...Object.keys(
+                mother.genes || {}
+            )
+        ]);
+
+
+    allGenes.forEach(
+        gene => {
+
+            const result =
+                makeBabyGene(
+                    father,
+                    mother,
+                    gene
+                );
+
+
+            if (result) {
+
+                babyGenes[gene] =
+                    result;
+
+            }
+
+        }
+    );
+
+
+    return babyGenes;
+
+}
+
+
+// ============================================
+// DETERMINE BABY MORPH
+// ============================================
+
+function determineBabyMorph(
+    species,
+    genes
+) {
+
+    const genetics =
+        geneticTypes[
+            species
+        ];
+
+
+    if (!genetics)
+        return "Normal";
+
+
+    const visualMorphs = [];
+
+
+    Object.keys(
+        genetics
+    ).forEach(
+        morph => {
+
+            const data =
+                genetics[morph];
+
+
+            const pair =
+                genes[
+                    data.gene
+                ];
+
+
+            if (!pair)
+                return;
+
+
+            if (
+                data.type ===
+                "recessive"
+            ) {
+
+                if (
+                    pair[0] ===
+                    data.mutated &&
+                    pair[1] ===
+                    data.mutated
+                ) {
+
+                    visualMorphs.push(
+                        morph
+                    );
+
+                }
+
+            }
+
+
+            if (
+                data.type ===
+                "dominant"
+            ) {
+
+                if (
+                    pair.includes(
+                        data.mutated
+                    )
+                ) {
+
+                    visualMorphs.push(
+                        morph
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    if (
+        visualMorphs.length === 0
+    ) {
+
+        return "Normal";
+
+    }
+
+
+    return visualMorphs.join(
+        " + "
+    );
+
+}
+
+
+// ============================================
+// BREEDING RESULT PREVIEW
+// ============================================
+
+function previewBreedingGenetics() {
+
+    if (
+        !selectedMale ||
+        !selectedFemale
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        selectedMale.species !==
+        selectedFemale.species
+    ) {
+
+        return;
+
+    }
+
+
+    const species =
+        selectedMale.species;
+
+
+    const genetics =
+        geneticTypes[
+            species
+        ];
+
+
+    if (!genetics)
+        return;
+
+
+    let text =
+        "🧬 Breeding preview\n\n";
+
+
+    Object.keys(
+        genetics
+    ).forEach(
+        morph => {
+
+            const data =
+                genetics[morph];
+
+
+            if (
+                data.type !==
+                "recessive"
+            )
+                return;
+
+
+            const fatherGenes =
+                selectedMale.genes[
+                    data.gene
+                ];
+
+
+            const motherGenes =
+                selectedFemale.genes[
+                    data.gene
+                ];
+
+
+            if (
+                !fatherGenes ||
+                !motherGenes
+            )
+                return;
+
+
+            let mutatedFather =
+                fatherGenes.filter(
+                    allele =>
+                        allele ===
+                        data.mutated
+                ).length;
+
+
+            let mutatedMother =
+                motherGenes.filter(
+                    allele =>
+                        allele ===
+                        data.mutated
+                ).length;
+
+
+            let probability =
+                0;
+
+
+            for (
+                let f = 0;
+                f < 2;
+                f++
+            ) {
+
+                for (
+                    let m = 0;
+                    m < 2;
+                    m++
+                ) {
+
+                    if (
+                        fatherGenes[f] ===
+                        data.mutated &&
+                        motherGenes[m] ===
+                        data.mutated
+                    ) {
+
+                        probability +=
+                            25;
+
+                    }
+
+                }
+
+            }
+
+
+            if (
+                probability > 0
+            ) {
+
+                text +=
+                    `${morph}: ${probability}% visual\n`;
+
+            }
+
+        }
+    );
+
+
+    console.log(
+        text
+    );
+
+}
+
+
+// ============================================
+// SHOW GENETICS
+// ============================================
+
+function showAnimalGenetics(
+    animal
+) {
+
+    upgradeAnimalGenetics(
+        animal
+    );
+
+
+    const hiddenGenes =
+        getHiddenGenes(
+            animal
+        );
+
+
+    let result =
+        `🧬 ${animal.name}\n\n`;
+
+
+    result +=
+        `Visible morph: ${
+            determineBabyMorph(
+                animal.species,
+                animal.genes
+            )
+        }\n\n`;
+
+
+    if (
+        hiddenGenes.length > 0
+    ) {
+
+        result +=
+            "🔒 Hidden / Het genes:\n";
+
+
+        hiddenGenes.forEach(
+            gene => {
+
+                result +=
+                    `• Het ${gene}\n`;
+
+            }
+        );
+
+    }
+    else {
+
+        result +=
+            "Geen bekende het-genen.";
+
+    }
+
+
+    alert(
+        result
+    );
+
+}
+
+
+// ============================================
+// PATCH BABY CREATION
+// ============================================
+
+function createAdvancedBaby(
+    father,
+    mother
+) {
+
+    const genes =
+        calculateBabyGenetics(
+            father,
+            mother
+        );
+
+
+    const morph =
+        determineBabyMorph(
+            father.species,
+            genes
+        );
+
+
+    return {
+
+        id:
+            Date.now() +
+            Math.random(),
+
+        name:
+            father.species +
+            " Baby",
+
+        species:
+            father.species,
+
+        morph:
+            morph,
+
+        sex:
+            randomSex(),
+
+        birthDay:
+            game.day,
+
+        ageDays: 0,
+
+        ageMonths: 0,
+
+        adultAgeMonths:
+            getAdultAge(
+                father.species
+            ),
+
+        isAdult: false,
+
+        breedingReady: false,
+
+        breedingCooldown: 0,
+
+        health:
+            Math.random() <
+            0.10
+                ? "Weak"
+                : "Healthy",
+
+        genes:
+            genes,
+
+        fatherId:
+            father.id,
+
+        motherId:
+            mother.id
+
+    };
+
+}
+
+
+// ============================================
+// UPDATE ALL GENETICS
+// ============================================
+
+function updateAllGenetics() {
+
+    game.animals.forEach(
+        animal => {
+
+            upgradeAnimalGenetics(
+                animal
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================
+// DEBUG / TEST
+// ============================================
+
+function showSelectedGenetics() {
+
+    if (selectedMale) {
+
+        showAnimalGenetics(
+            selectedMale
+        );
+
+    }
+
+
+    if (selectedFemale) {
+
+        showAnimalGenetics(
+            selectedFemale
+        );
+
+    }
+
+}
+
+
+// ============================================
+// START PART 7
+// ============================================
+
+updateAllGenetics();
+
+saveGame();
+
+updateUI();
+
+console.log(
+    "🧬 Part 7 genetics loaded!"
+);
