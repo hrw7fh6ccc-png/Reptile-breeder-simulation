@@ -707,3 +707,72 @@ section > p {
 ::-webkit-scrollbar-thumb:hover {
     background: #4b6e56;
 }
+
+
+
+/* =========================================
+   PART 17 - ANIMAL SHOP
+========================================= */
+
+.shop-money {
+    background: #19281f;
+    border: 1px solid #3b5747;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: center;
+}
+
+.shop-animal-card {
+    background: #19281f;
+    border: 1px solid #344b3c;
+    border-radius: 15px;
+    padding: 20px;
+    transition: 0.2s;
+}
+
+.shop-animal-card:hover {
+    transform: translateY(-4px);
+    border-color: #628d70;
+}
+
+.shop-animal-card h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.shop-animal-card p {
+    color: #c7d4ca;
+    margin: 7px 0;
+}
+
+.shop-price {
+    font-size: 21px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.buy-animal-button {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #3d8b5b;
+    color: white;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.buy-animal-button:hover {
+    background: #4da66c;
+}
+
+.buy-animal-button:active {
+    transform: scale(0.97);
+}
