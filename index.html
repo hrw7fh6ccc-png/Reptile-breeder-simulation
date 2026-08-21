@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
 
@@ -16,7 +17,13 @@
     >
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
 
 <header>
 
@@ -54,9 +61,10 @@
 </header>
 
 
-<!-- ==========================================
+
+<!-- =========================================
      NAVIGATION
-========================================== -->
+========================================= -->
 
 <nav>
 
@@ -112,12 +120,13 @@
 </nav>
 
 
+
 <main>
 
 
-<!-- ==========================================
+<!-- =========================================
      HOME
-========================================== -->
+========================================= -->
 
 <section
     id="home"
@@ -132,7 +141,8 @@
 
         <p>
             Bouw je eigen reptielenfokkerij,
-            fok dieren en ontdek zeldzame morphs.
+            koop dieren, fok morphs en laat
+            je collectie groeien.
         </p>
 
 
@@ -193,7 +203,8 @@
             <h3>💰 Geld</h3>
 
             <p>
-                €<b id="homeMoney">1000</b>
+                €
+                <b id="homeMoney">1000</b>
             </p>
 
         </div>
@@ -204,9 +215,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      ANIMALS
-========================================== -->
+========================================= -->
 
 <section
     id="animals"
@@ -219,18 +230,32 @@
         Hier staan al je reptielen.
     </p>
 
+
     <div
         id="animalList"
         class="animal-grid"
-    ></div>
+    >
+
+        <div class="empty-state">
+
+            🦎 Je hebt nog geen dieren.
+
+            <br><br>
+
+            Ga naar de Shop om je eerste
+            reptiel te kopen.
+
+        </div>
+
+    </div>
 
 </section>
 
 
 
-<!-- ==========================================
+<!-- =========================================
      SHOP
-========================================== -->
+========================================= -->
 
 <section
     id="shop"
@@ -240,16 +265,20 @@
     <h2>🛒 Reptile Shop</h2>
 
     <p>
-        Koop nieuwe dieren en upgrades.
+        Koop nieuwe reptielen voor je collectie.
     </p>
+
+
+    <div class="shop-money">
+
+        💰 Je hebt:
+        €<b id="shopMoney">1000</b>
+
+    </div>
+
 
     <div
         id="shopList"
-        class="shop-grid"
-    ></div>
-
-    <div
-        id="upgradeList"
         class="shop-grid"
     ></div>
 
@@ -257,9 +286,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      BREEDING
-========================================== -->
+========================================= -->
 
 <section
     id="breeding"
@@ -267,6 +296,11 @@
 >
 
     <h2>🧬 Breeding Center</h2>
+
+    <p>
+        Kies een mannetje en vrouwtje
+        om te proberen te fokken.
+    </p>
 
 
     <div class="breeding-selection">
@@ -309,11 +343,13 @@
     </div>
 
 
+
     <div class="card">
 
         <h3>
             🐍 Kies je ouders
         </h3>
+
 
         <div
             id="breedingAnimals"
@@ -323,11 +359,13 @@
     </div>
 
 
+
     <div class="card breeding-result">
 
         <h3>
             🧬 Breeding Result
         </h3>
+
 
         <div id="breedingMessage">
 
@@ -352,9 +390,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      INCUBATOR
-========================================== -->
+========================================= -->
 
 <section
     id="incubator"
@@ -367,10 +405,19 @@
         Hier worden je eieren uitgebroed.
     </p>
 
+
     <div
         id="eggList"
         class="egg-grid"
-    ></div>
+    >
+
+        <div class="empty-state">
+
+            🥚 Je hebt nog geen eieren.
+
+        </div>
+
+    </div>
 
 
     <div
@@ -382,9 +429,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      MARKET
-========================================== -->
+========================================= -->
 
 <section
     id="market"
@@ -394,8 +441,9 @@
     <h2>💰 Reptile Market</h2>
 
     <p>
-        Verkoop je dieren en verdien geld.
+        Verkoop dieren die je niet meer nodig hebt.
     </p>
+
 
     <div
         id="marketList"
@@ -406,9 +454,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      STATISTICS
-========================================== -->
+========================================= -->
 
 <section
     id="statistics"
@@ -423,7 +471,9 @@
 
         <div class="card">
 
-            <h3>🦎 Dieren geboren</h3>
+            <h3>
+                🦎 Dieren geboren
+            </h3>
 
             <p>
                 <b id="animalsBorn">
@@ -436,7 +486,9 @@
 
         <div class="card">
 
-            <h3>🥚 Eieren gelegd</h3>
+            <h3>
+                🥚 Eieren gelegd
+            </h3>
 
             <p>
                 <b id="eggsLaid">
@@ -449,7 +501,9 @@
 
         <div class="card">
 
-            <h3>💰 Dieren verkocht</h3>
+            <h3>
+                💰 Dieren verkocht
+            </h3>
 
             <p>
                 <b id="animalsSold">
@@ -462,7 +516,9 @@
 
         <div class="card">
 
-            <h3>💵 Geld verdiend</h3>
+            <h3>
+                💵 Geld verdiend
+            </h3>
 
             <p>
                 €<b id="moneyEarned">
@@ -481,9 +537,9 @@
 
 
 
-<!-- ==========================================
+<!-- =========================================
      ANIMAL MODAL
-========================================== -->
+========================================= -->
 
 <div
     id="animalModal"
@@ -512,11 +568,9 @@
 
 
 
-<!-- ==========================================
-     BASIC NAVIGATION
-     Werkt ook als je grote JS tijdelijk
-     fouten heeft.
-========================================== -->
+<!-- =========================================
+     NAVIGATION SYSTEM
+========================================= -->
 
 <script>
 
@@ -535,14 +589,14 @@ function openPage(pageName) {
     });
 
 
-    const page =
+    const selectedPage =
         document.getElementById(pageName);
 
 
-    if (!page) {
+    if (!selectedPage) {
 
         console.error(
-            "Pagina niet gevonden:",
+            "Pagina bestaat niet:",
             pageName
         );
 
@@ -551,74 +605,65 @@ function openPage(pageName) {
     }
 
 
-    page.classList.add("active");
+    selectedPage.classList.add("active");
 
-    page.style.display = "block";
-
-
-    /*
-       Probeer daarna de functies uit
-       je game-JavaScript te gebruiken.
-    */
-
-    try {
-
-        if (
-            pageName === "animals" &&
-            typeof renderFinalAnimals === "function"
-        ) {
-
-            renderFinalAnimals();
-
-        }
+    selectedPage.style.display = "block";
 
 
-        if (
-            pageName === "shop" &&
-            typeof renderShopPage === "function"
-        ) {
+    /* Animals */
 
-            renderShopPage();
+    if (
+        pageName === "animals" &&
+        typeof renderFinalAnimals === "function"
+    ) {
 
-        }
-
-
-        if (
-            pageName === "breeding" &&
-            typeof renderBreedingPage === "function"
-        ) {
-
-            renderBreedingPage();
-
-        }
-
-
-        if (
-            pageName === "incubator" &&
-            typeof renderMonthlyEggs === "function"
-        ) {
-
-            renderMonthlyEggs();
-
-        }
+        renderFinalAnimals();
 
     }
 
-    catch(error) {
 
-        console.error(
-            "Game functie fout:",
-            error
-        );
+    /* Shop */
+
+    if (
+        pageName === "shop" &&
+        typeof renderAnimalShop === "function"
+    ) {
+
+        renderAnimalShop();
+
+    }
+
+
+    /* Breeding */
+
+    if (
+        pageName === "breeding" &&
+        typeof renderBreedingPage === "function"
+    ) {
+
+        renderBreedingPage();
+
+    }
+
+
+    /* Incubator */
+
+    if (
+        pageName === "incubator" &&
+        typeof renderMonthlyEggs === "function"
+    ) {
+
+        renderMonthlyEggs();
 
     }
 
 }
 
 
-/* ==========================================
-   VOLGENDE MAAND
-========================================== */
+
+/* =========================================
+   NEXT MONTH
+========================================= */
 
 function goNextMonth() {
 
@@ -633,41 +678,17 @@ function goNextMonth() {
     }
 
 
-    /*
-       Fallback als nextMonth nog niet
-       beschikbaar is.
-    */
-
-    const monthElement =
-        document.getElementById("month");
-
-
-    const homeMonth =
-        document.getElementById("homeMonth");
-
-
-    let month =
-        parseInt(
-            monthElement.textContent
-        ) || 1;
-
-
-    month++;
-
-
-    monthElement.textContent =
-        month;
-
-
-    homeMonth.textContent =
-        month;
+    console.log(
+        "nextMonth() is nog niet geladen."
+    );
 
 }
 
 
-/* ==========================================
+
+/* =========================================
    START HOME
-========================================== */
+========================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -682,12 +703,13 @@ document.addEventListener(
 
 
 
-<!-- ==========================================
-     JOUW GAME JAVASCRIPT
-========================================== -->
+<!-- =========================================
+     GAME JAVASCRIPT
+========================================= -->
 
 <script src="./script.js"></script>
 
 
 </body>
+
 </html>
