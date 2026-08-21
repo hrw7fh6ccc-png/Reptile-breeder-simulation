@@ -10487,3 +10487,587 @@ console.log(
 console.log(
     "🥚 Eggs use species-specific incubation times."
 );
+
+
+
+
+
+
+// ============================================
+// PART 16 - PAGE NAVIGATION
+// ============================================
+
+function showPage(pageName) {
+
+    // Alle pagina's verbergen
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(page) {
+        page.classList.remove("active");
+    });
+
+
+    // Gevraagde pagina zoeken
+    const selectedPage =
+        document.getElementById(pageName);
+
+
+    // Als de pagina bestaat: tonen
+    if (selectedPage) {
+
+        selectedPage.classList.add("active");
+
+    } else {
+
+        console.error(
+            "Pagina bestaat niet:",
+            pageName
+        );
+
+        return;
+    }
+
+
+    // ----------------------------------------
+    // PAGINA SPECIFIEKE UPDATES
+    // ----------------------------------------
+
+    if (pageName === "home") {
+
+        updateHomePage();
+
+    }
+
+
+    if (pageName === "animals") {
+
+        renderFinalAnimals();
+
+    }
+
+
+    if (pageName === "shop") {
+
+        renderShopPage();
+
+        renderUpgrades();
+
+    }
+
+
+    if (pageName === "breeding") {
+
+        renderBreedingPage();
+
+    }
+
+
+    if (pageName === "incubator") {
+
+        renderMonthlyEggs();
+
+        renderIncubators();
+
+    }
+
+
+    // Algemene UI
+    updateFinalUI();
+
+    updateHomePage();
+
+}
+
+
+// ============================================
+// HOME UPDATE
+// ============================================
+
+function updateHomePage() {
+
+    const day =
+        game.day || 1;
+
+    const month =
+        game.month || 1;
+
+    const money =
+        game.money || 0;
+
+    const animalCount =
+        game.animals
+            ? game.animals.length
+            : 0;
+
+    const eggCount =
+        game.eggs
+            ? game.eggs.length
+            : 0;
+
+
+    // Header
+    const headerDay =
+        document.getElementById("day");
+
+    const headerMonth =
+        document.getElementById("month");
+
+    const headerMoney =
+        document.getElementById("money");
+
+    const headerAnimals =
+        document.getElementById("animalCount");
+
+    const headerEggs =
+        document.getElementById("eggCount");
+
+
+    if (headerDay)
+        headerDay.textContent = day;
+
+    if (headerMonth)
+        headerMonth.textContent = month;
+
+    if (headerMoney)
+        headerMoney.textContent = money;
+
+    if (headerAnimals)
+        headerAnimals.textContent =
+            animalCount;
+
+    if (headerEggs)
+        headerEggs.textContent =
+            eggCount;
+
+
+    // Home
+    const homeDay =
+        document.getElementById("homeDay");
+
+    const homeMonth =
+        document.getElementById("homeMonth");
+
+    const homeMoney =
+        document.getElementById("homeMoney");
+
+    const homeAnimals =
+        document.getElementById(
+            "homeAnimalCount"
+        );
+
+    const homeEggs =
+        document.getElementById(
+            "homeEggCount"
+        );
+
+
+    if (homeDay)
+        homeDay.textContent = day;
+
+    if (homeMonth)
+        homeMonth.textContent = month;
+
+    if (homeMoney)
+        homeMoney.textContent = money;
+
+    if (homeAnimals)
+        homeAnimals.textContent =
+            animalCount;
+
+    if (homeEggs)
+        homeEggs.textContent =
+            eggCount;
+
+}
+
+
+// ============================================
+// BREEDING PAGE
+// ============================================
+
+function renderBreedingPage() {
+
+    const container =
+        document.getElementById(
+            "breedingAnimals"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    const animals =
+        game.animals || [];
+
+
+    if (animals.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                🦎 Je hebt nog geen dieren.
+
+                <br><br>
+
+                Koop eerst een dier.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    animals.forEach(function(animal) {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "breeding-animal-card";
+
+
+        const gender =
+            animal.gender ||
+            animal.sex ||
+            "Unknown";
+
+
+        const genderIcon =
+            gender === "Male"
+                ? "♂️"
+                : gender === "Female"
+                    ? "♀️"
+                    : "❓";
+
+
+        card.innerHTML = `
+
+            <h3>
+                ${animal.name || "Reptile"}
+            </h3>
+
+            <p>
+                ${animal.species}
+            </p>
+
+            <p>
+                🧬
+                ${animal.morph || "Normal"}
+            </p>
+
+            <p>
+                ${genderIcon}
+                ${gender}
+            </p>
+
+            <button
+                onclick="
+                    selectBreedingAnimal(
+                        ${animal.id}
+                    )
+                "
+            >
+                Selecteren
+            </button>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// ============================================
+// SELECT BREEDING ANIMAL
+// ============================================
+
+function selectBreedingAnimal(id) {
+
+    const animal =
+        game.animals.find(
+            function(a) {
+                return a.id === id;
+            }
+        );
+
+
+    if (!animal) {
+        return;
+    }
+
+
+    const gender =
+        animal.gender ||
+        animal.sex;
+
+
+    if (gender === "Male") {
+
+        selectedMale =
+            animal;
+
+        updateMaleSelection();
+
+    }
+
+
+    else if (gender === "Female") {
+
+        selectedFemale =
+            animal;
+
+        updateFemaleSelection();
+
+    }
+
+
+    else {
+
+        alert(
+            "Dit dier heeft geen geslacht ingesteld."
+        );
+
+        return;
+
+    }
+
+
+    updateBreedButton();
+
+}
+
+
+// ============================================
+// MALE SELECTION
+// ============================================
+
+function updateMaleSelection() {
+
+    const box =
+        document.getElementById(
+            "maleSelection"
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    if (!selectedMale) {
+
+        box.innerHTML =
+            "<p>Kies een mannetje.</p>";
+
+        return;
+
+    }
+
+
+    box.innerHTML = `
+
+        <h3>
+            🐍 ${selectedMale.name}
+        </h3>
+
+        <p>
+            ${selectedMale.species}
+        </p>
+
+        <p>
+            🧬
+            ${selectedMale.morph || "Normal"}
+        </p>
+
+        <button
+            onclick="
+                selectedMale = null;
+                updateMaleSelection();
+                updateBreedButton();
+            "
+        >
+            Verwijderen
+        </button>
+
+    `;
+
+}
+
+
+// ============================================
+// FEMALE SELECTION
+// ============================================
+
+function updateFemaleSelection() {
+
+    const box =
+        document.getElementById(
+            "femaleSelection"
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    if (!selectedFemale) {
+
+        box.innerHTML =
+            "<p>Kies een vrouwtje.</p>";
+
+        return;
+
+    }
+
+
+    box.innerHTML = `
+
+        <h3>
+            🐍 ${selectedFemale.name}
+        </h3>
+
+        <p>
+            ${selectedFemale.species}
+        </p>
+
+        <p>
+            🧬
+            ${selectedFemale.morph || "Normal"}
+        </p>
+
+        <button
+            onclick="
+                selectedFemale = null;
+                updateFemaleSelection();
+                updateBreedButton();
+            "
+        >
+            Verwijderen
+        </button>
+
+    `;
+
+}
+
+
+// ============================================
+// BREED BUTTON
+// ============================================
+
+function updateBreedButton() {
+
+    const button =
+        document.getElementById(
+            "breedButton"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    if (
+        selectedMale &&
+        selectedFemale
+    ) {
+
+        button.disabled = false;
+
+        button.textContent =
+            "🧬 Start Breeding";
+
+    }
+
+    else {
+
+        button.disabled = true;
+
+        button.textContent =
+            "🧬 Kies beide ouders";
+
+    }
+
+}
+
+
+// ============================================
+// SHOP PAGE
+// ============================================
+
+function renderShopPage() {
+
+    const container =
+        document.getElementById(
+            "shopList"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = `
+
+        <div class="card">
+
+            <h3>🏠 Upgrades</h3>
+
+            <p>
+                Verbeter je reptielenbedrijf.
+            </p>
+
+            <div id="upgradeList"></div>
+
+        </div>
+
+    `;
+
+
+    renderUpgrades();
+
+}
+
+
+// ============================================
+// INITIALIZE NAVIGATION
+// ============================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        showPage("home");
+
+        updateHomePage();
+
+    }
+);
+
+
+// ============================================
+// INITIAL LOAD
+// ============================================
+
+showPage("home");
+
+updateHomePage();
+
+console.log(
+    "🧭 Part 16 - Navigation loaded!"
+);
