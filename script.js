@@ -1,8 +1,12 @@
 // ============================================
 // REPTILE BREEDING SIMULATION
-// PART 2
+// PART 3
 // ============================================
 
+
+// ============================================
+// GAME DATA
+// ============================================
 
 let game = {
 
@@ -18,7 +22,7 @@ let game = {
 
 
 // ============================================
-// AVAILABLE SHOP ANIMALS
+// SHOP
 // ============================================
 
 const shopAnimals = [
@@ -107,26 +111,39 @@ function loadGame() {
             "reptileBreedingSimulation"
         );
 
+
     if (!saved) {
+
         return;
+
     }
+
 
     try {
 
-        game = JSON.parse(saved);
+        game =
+            JSON.parse(saved);
+
 
         if (!game.animals) {
+
             game.animals = [];
+
         }
+
 
         if (!game.eggs) {
+
             game.eggs = [];
+
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Save kon niet geladen worden.",
+            "Save kon niet geladen worden:",
             error
         );
 
@@ -142,15 +159,18 @@ function loadGame() {
 function saveGame() {
 
     localStorage.setItem(
+
         "reptileBreedingSimulation",
+
         JSON.stringify(game)
+
     );
 
 }
 
 
 // ============================================
-// PAGE NAVIGATION
+// NAVIGATION
 // ============================================
 
 function showPage(pageName) {
@@ -159,18 +179,24 @@ function showPage(pageName) {
         .querySelectorAll(".page")
         .forEach(page => {
 
-            page.classList.remove("active");
+            page.classList.remove(
+                "active"
+            );
 
         });
 
 
-    const selected =
-        document.getElementById(pageName);
+    const page =
+        document.getElementById(
+            pageName
+        );
 
 
-    if (selected) {
+    if (page) {
 
-        selected.classList.add("active");
+        page.classList.add(
+            "active"
+        );
 
     }
 
@@ -188,9 +214,12 @@ function nextDay() {
 
     game.day++;
 
+
     updateAnimalAges();
 
+
     saveGame();
+
 
     updateUI();
 
@@ -198,96 +227,145 @@ function nextDay() {
 
 
 // ============================================
-// AGE
+// AGE SYSTEM
 // ============================================
 
 function updateAnimalAges() {
 
-    game.animals.forEach(animal => {
+    game.animals.forEach(
+        animal => {
 
-        const daysAlive =
-            game.day - animal.birthDay;
-
-        animal.ageMonths =
-            Math.floor(daysAlive / 28);
-
-    });
-
-}
+            const daysAlive =
+                game.day -
+                animal.birthDay;
 
 
-// ============================================
-// SHOP DISPLAY
-// ============================================
-
-function renderShop() {
-
-    const container =
-        document.getElementById("shopList");
-
-    container.innerHTML = "";
+            animal.ageDays =
+                Math.max(
+                    0,
+                    daysAlive
+                );
 
 
-    shopAnimals.forEach((item, index) => {
-
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "card shop-card";
+            animal.ageMonths =
+                Math.floor(
+                    daysAlive / 28
+                );
 
 
-        card.innerHTML = `
-
-            <div class="big-icon">
-                ${item.icon}
-            </div>
-
-            <h3>
-                ${item.species}
-            </h3>
-
-            <p>
-                Morph:
-                <b>${item.morph}</b>
-            </p>
-
-            <p class="price">
-                €${item.price}
-            </p>
-
-            <button
-                onclick="buyAnimal(${index})"
-            >
-                Kopen
-            </button>
-
-        `;
+            animal.isAdult =
+                animal.ageMonths >=
+                animal.adultAgeMonths;
 
 
-        container.appendChild(card);
+            animal.breedingReady =
+                animal.isAdult &&
+                animal.health ===
+                "Healthy";
 
-    });
+        }
+    );
 
 }
 
 
 // ============================================
-// BUY
+// RANDOM SEX
+// ============================================
+
+function randomSex() {
+
+    return Math.random() < 0.5
+        ? "Male"
+        : "Female";
+
+}
+
+
+// ============================================
+// ADULT AGE
+// ============================================
+
+function getAdultAge(species) {
+
+    if (
+        species ===
+        "Leopard Gecko"
+    ) {
+
+        return 12;
+
+    }
+
+
+    if (
+        species ===
+        "Ball Python"
+    ) {
+
+        return 18;
+
+    }
+
+
+    if (
+        species ===
+        "Corn Snake"
+    ) {
+
+        return 18;
+
+    }
+
+
+    if (
+        species ===
+        "Bearded Dragon"
+    ) {
+
+        return 12;
+
+    }
+
+
+    if (
+        species ===
+        "Crested Gecko"
+    ) {
+
+        return 12;
+
+    }
+
+
+    return 12;
+
+}
+
+
+// ============================================
+// BUY ANIMAL
 // ============================================
 
 function buyAnimal(shopIndex) {
 
     const item =
-        shopAnimals[shopIndex];
+        shopAnimals[
+            shopIndex
+        ];
 
 
     if (!item) {
+
         return;
+
     }
 
 
-    if (game.money < item.price) {
+    if (
+        game.money <
+        item.price
+    ) {
 
         alert(
             "Je hebt niet genoeg geld!"
@@ -298,7 +376,8 @@ function buyAnimal(shopIndex) {
     }
 
 
-    game.money -= item.price;
+    game.money -=
+        item.price;
 
 
     const animal = {
@@ -322,8 +401,22 @@ function buyAnimal(shopIndex) {
         birthDay:
             game.day,
 
+        ageDays:
+            0,
+
         ageMonths:
             0,
+
+        adultAgeMonths:
+            getAdultAge(
+                item.species
+            ),
+
+        isAdult:
+            false,
+
+        breedingReady:
+            false,
 
         health:
             "Healthy",
@@ -334,7 +427,9 @@ function buyAnimal(shopIndex) {
     };
 
 
-    game.animals.push(animal);
+    game.animals.push(
+        animal
+    );
 
 
     saveGame();
@@ -343,122 +438,83 @@ function buyAnimal(shopIndex) {
 
 
     alert(
-        `${item.species} (${item.morph}) `
-        + `is toegevoegd aan je collectie!`
+        `${item.species} ` +
+        `(${item.morph}) ` +
+        `is toegevoegd!`
     );
 
 }
 
 
 // ============================================
-// SEX
+// SHOP RENDER
 // ============================================
 
-function randomSex() {
+function renderShop() {
 
-    return Math.random() < 0.5
-        ? "Male"
-        : "Female";
-
-}
-
-
-// ============================================
-// RENAME
-// ============================================
-
-function renameAnimal(id) {
-
-    const animal =
-        game.animals.find(
-            a => a.id === id
+    const container =
+        document.getElementById(
+            "shopList"
         );
 
 
-    if (!animal) {
+    if (!container) {
+
         return;
+
     }
 
 
-    const newName =
-        prompt(
-            "Nieuwe naam:",
-            animal.name
-        );
+    container.innerHTML =
+        "";
 
 
-    if (
-        newName === null ||
-        newName.trim() === ""
-    ) {
-        return;
-    }
+    shopAnimals.forEach(
+        (item, index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-    animal.name =
-        newName.trim();
+            card.className =
+                "card shop-card";
 
 
-    saveGame();
+            card.innerHTML = `
 
-    updateUI();
+                <div class="big-icon">
+                    ${item.icon}
+                </div>
 
-}
+                <h3>
+                    ${item.species}
+                </h3>
 
+                <p>
+                    ${item.morph}
+                </p>
 
-// ============================================
-// SELL
-// ============================================
+                <p class="price">
+                    €${item.price}
+                </p>
 
-function sellAnimal(id) {
+                <button
+                    onclick="buyAnimal(${index})"
+                >
+                    Kopen
+                </button>
 
-    const index =
-        game.animals.findIndex(
-            a => a.id === id
-        );
-
-
-    if (index === -1) {
-        return;
-    }
-
-
-    const animal =
-        game.animals[index];
-
-
-    const basePrice =
-        animal.purchasePrice || 50;
+            `;
 
 
-    const sellPrice =
-        Math.floor(basePrice * 0.7);
+            container.appendChild(
+                card
+            );
 
-
-    const confirmed =
-        confirm(
-            `Wil je ${animal.name} verkopen ` +
-            `voor €${sellPrice}?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    game.money += sellPrice;
-
-
-    game.animals.splice(
-        index,
-        1
+        }
     );
-
-
-    saveGame();
-
-    updateUI();
 
 }
 
@@ -467,11 +523,23 @@ function sellAnimal(id) {
 // ANIMAL ICON
 // ============================================
 
-function getAnimalIcon(species) {
+function getAnimalIcon(
+    species
+) {
 
     if (
-        species === "Ball Python" ||
-        species === "Corn Snake"
+        species ===
+        "Ball Python"
+    ) {
+
+        return "🐍";
+
+    }
+
+
+    if (
+        species ===
+        "Corn Snake"
     ) {
 
         return "🐍";
@@ -480,6 +548,53 @@ function getAnimalIcon(species) {
 
 
     return "🦎";
+
+}
+
+
+// ============================================
+// BREEDING STATUS
+// ============================================
+
+function getBreedingStatus(
+    animal
+) {
+
+    if (
+        animal.health !==
+        "Healthy"
+    ) {
+
+        return {
+            text:
+                "Niet geschikt",
+            className:
+                "young"
+        };
+
+    }
+
+
+    if (
+        !animal.isAdult
+    ) {
+
+        return {
+            text:
+                "Nog te jong",
+            className:
+                "young"
+        };
+
+    }
+
+
+    return {
+        text:
+            "Breeding ready",
+        className:
+            "ready"
+    };
 
 }
 
@@ -496,22 +611,33 @@ function renderAnimals() {
         );
 
 
-    container.innerHTML = "";
+    if (!container) {
+
+        return;
+
+    }
 
 
-    if (game.animals.length === 0) {
+    container.innerHTML =
+        "";
+
+
+    if (
+        game.animals.length === 0
+    ) {
 
         container.innerHTML = `
 
             <div class="card">
 
                 <h3>
-                    Je hebt nog geen dieren.
+                    Geen dieren
                 </h3>
 
                 <p>
-                    Ga naar de Shop om je
-                    eerste reptiel te kopen.
+                    Ga naar de shop
+                    om je eerste reptiel
+                    te kopen.
                 </p>
 
             </div>
@@ -526,12 +652,26 @@ function renderAnimals() {
     game.animals.forEach(
         (animal, index) => {
 
+            const status =
+                getBreedingStatus(
+                    animal
+                );
+
+
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
                 "animal-card";
+
+
+            card.onclick =
+                () => openAnimalModal(
+                    animal.id
+                );
 
 
             card.innerHTML = `
@@ -547,7 +687,6 @@ function renderAnimals() {
                 </div>
 
                 <p>
-                    <b>Species:</b>
                     ${animal.species}
                 </p>
 
@@ -567,41 +706,323 @@ function renderAnimals() {
                     maanden
                 </p>
 
-                <p>
-                    <b>Health:</b>
-                    ${animal.health}
-                </p>
-
-                <p>
-                    <b>ID:</b>
-                    #${index + 1}
-                </p>
-
-                <div class="animal-actions">
-
-                    <button
-                        class="rename-button"
-                        onclick="renameAnimal(${animal.id})"
-                    >
-                        ✏️ Naam
-                    </button>
-
-                    <button
-                        class="sell-button"
-                        onclick="sellAnimal(${animal.id})"
-                    >
-                        💰 Verkopen
-                    </button>
-
-                </div>
+                <span
+                    class="status ${status.className}"
+                >
+                    ${status.text}
+                </span>
 
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
+
+}
+
+
+// ============================================
+// OPEN ANIMAL
+// ============================================
+
+function openAnimalModal(id) {
+
+    const animal =
+        game.animals.find(
+            a => a.id === id
+        );
+
+
+    if (!animal) {
+
+        return;
+
+    }
+
+
+    const details =
+        document.getElementById(
+            "animalDetails"
+        );
+
+
+    const status =
+        getBreedingStatus(
+            animal
+        );
+
+
+    details.innerHTML = `
+
+        <div
+            style="
+                text-align:center;
+                font-size:70px;
+            "
+        >
+            ${getAnimalIcon(
+                animal.species
+            )}
+        </div>
+
+        <h2>
+            ${animal.name}
+        </h2>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Species
+            </span>
+            <span>
+                ${animal.species}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Morph
+            </span>
+            <span>
+                ${animal.morph}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Sex
+            </span>
+            <span>
+                ${animal.sex}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Age
+            </span>
+            <span>
+                ${animal.ageMonths}
+                maanden
+                (${animal.ageDays}
+                dagen)
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Birth Day
+            </span>
+            <span>
+                Dag ${animal.birthDay}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Health
+            </span>
+            <span>
+                ${animal.health}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Adult
+            </span>
+            <span>
+                ${animal.isAdult
+                    ? "Ja"
+                    : "Nee"}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Breeding
+            </span>
+            <span>
+                ${status.text}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Adult vanaf
+            </span>
+            <span>
+                ${animal.adultAgeMonths}
+                maanden
+            </span>
+        </div>
+
+        <div class="action-row">
+
+            <button
+                class="rename-button"
+                onclick="
+                    renameAnimal(${animal.id})
+                "
+            >
+                ✏️ Naam veranderen
+            </button>
+
+            <button
+                class="sell-button"
+                onclick="
+                    sellAnimal(${animal.id})
+                "
+            >
+                💰 Verkopen
+            </button>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "animalModal"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
+}
+
+
+// ============================================
+// CLOSE MODAL
+// ============================================
+
+function closeAnimalModal() {
+
+    document
+        .getElementById(
+            "animalModal"
+        )
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+
+// ============================================
+// RENAME
+// ============================================
+
+function renameAnimal(id) {
+
+    const animal =
+        game.animals.find(
+            a => a.id === id
+        );
+
+
+    if (!animal) {
+
+        return;
+
+    }
+
+
+    const newName =
+        prompt(
+            "Nieuwe naam:",
+            animal.name
+        );
+
+
+    if (
+        newName === null ||
+        newName.trim() === ""
+    ) {
+
+        return;
+
+    }
+
+
+    animal.name =
+        newName.trim();
+
+
+    saveGame();
+
+    updateUI();
+
+    openAnimalModal(
+        animal.id
+    );
+
+}
+
+
+// ============================================
+// SELL
+// ============================================
+
+function sellAnimal(id) {
+
+    const index =
+        game.animals.findIndex(
+            a => a.id === id
+        );
+
+
+    if (index === -1) {
+
+        return;
+
+    }
+
+
+    const animal =
+        game.animals[index];
+
+
+    const sellPrice =
+        Math.floor(
+            (animal.purchasePrice || 50)
+            * 0.7
+        );
+
+
+    const confirmed =
+        confirm(
+            `Verkoop ${animal.name} ` +
+            `voor €${sellPrice}?`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    game.money +=
+        sellPrice;
+
+
+    game.animals.splice(
+        index,
+        1
+    );
+
+
+    closeAnimalModal();
+
+    saveGame();
+
+    updateUI();
 
 }
 
@@ -661,6 +1082,12 @@ function updateUI() {
 
 
     document.getElementById(
+        "homeMoney"
+    ).textContent =
+        game.money;
+
+
+    document.getElementById(
         "eggCount"
     ).textContent =
         game.eggs.length;
@@ -672,12 +1099,6 @@ function updateUI() {
         game.eggs.length;
 
 
-    document.getElementById(
-        "homeMoney"
-    ).textContent =
-        game.money;
-
-
     renderAnimals();
 
     renderShop();
@@ -686,7 +1107,7 @@ function updateUI() {
 
 
 // ============================================
-// START
+// START GAME
 // ============================================
 
 loadGame();
