@@ -58,6 +58,11 @@ button:hover {
     filter: brightness(1.15);
 }
 
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 main {
     width: 100%;
     max-width: 1000px;
@@ -103,6 +108,8 @@ main {
     margin-bottom: 15px;
 }
 
+/* SHOP */
+
 .shop-grid {
     display: grid;
     grid-template-columns:
@@ -122,6 +129,8 @@ main {
     font-size: 20px;
     font-weight: bold;
 }
+
+/* ANIMALS */
 
 .animal-grid {
     display: grid;
@@ -148,24 +157,98 @@ main {
     margin: 8px 0;
 }
 
-.gene-box {
+/* BREEDING */
+
+.breeding-selection {
+    display: grid;
+    grid-template-columns:
+        1fr 70px 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.parent-box {
+    background: #17251b;
+    border: 2px solid #2d4433;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 150px;
+    text-align: center;
+}
+
+.breeding-symbol {
+    text-align: center;
+    font-size: 35px;
+}
+
+.breeding-animal-list {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.breeding-animal {
     background: #101a14;
     border: 1px solid #304637;
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 12px;
+    border-radius: 10px;
+    padding: 14px;
 }
 
-.gene {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #27382c;
+.breeding-animal button {
+    width: 100%;
+    margin-top: 8px;
 }
 
-.gene:last-child {
-    border-bottom: none;
+.male-button {
+    background: #536b8a;
 }
+
+.female-button {
+    background: #8a536b;
+}
+
+.breeding-result {
+    text-align: center;
+}
+
+.success {
+    padding: 15px;
+    background: #214d2d;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.warning {
+    padding: 15px;
+    background: #5b4220;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* EGGS */
+
+.egg-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.egg-card {
+    background: #17251b;
+    border: 1px solid #3c4932;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.egg-icon {
+    font-size: 65px;
+}
+
+/* MODAL */
 
 .modal {
     position: fixed;
@@ -199,7 +282,6 @@ main {
     right: 15px;
     top: 15px;
     background: #8e3636;
-    padding: 8px 11px;
 }
 
 .detail-row {
@@ -213,6 +295,21 @@ main {
 .detail-title {
     font-weight: bold;
     color: #a8c8ae;
+}
+
+.gene-box {
+    background: #101a14;
+    border: 1px solid #304637;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+}
+
+.gene {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #27382c;
 }
 
 @media (max-width: 600px) {
@@ -229,9 +326,16 @@ main {
         padding: 12px;
     }
 
+    .breeding-selection {
+        grid-template-columns: 1fr;
+    }
+
+    .breeding-symbol {
+        transform: rotate(90deg);
+    }
+
     .detail-row {
         flex-direction: column;
         gap: 3px;
     }
-
 }
