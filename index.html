@@ -10,182 +10,275 @@
 <body>
 
 <header>
+
     <h1>🦎 Reptile Breeding Simulation</h1>
 
     <div class="stats-bar">
-        <span>📅 Dag <b id="day">1</b></span>
-        <span>🗓️ Maand <b id="month">0</b></span>
-        <span>💰 €<b id="money">1000</b></span>
-        <span>🦎 Dieren <b id="animalCount">0</b></span>
+
+        <span>
+            📅 Dag <b id="day">1</b>
+        </span>
+
+        <span>
+            🗓️ Maand <b id="month">0</b>
+        </span>
+
+        <span>
+            💰 €<b id="money">1000</b>
+        </span>
+
+        <span>
+            🦎 Dieren <b id="animalCount">0</b>
+        </span>
+
     </div>
+
 </header>
 
 
 <nav>
-    <button onclick="showPage('home')">🏠 Home</button>
-    <button onclick="showPage('animals')">🦎 Animals</button>
-    <button onclick="showPage('shop')">🛒 Shop</button>
-    <button onclick="showPage('breeding')">🧬 Breeding</button>
-    <button onclick="showPage('incubator')">🥚 Incubator</button>
+
+    <button onclick="showPage('home')">
+        🏠 Home
+    </button>
+
+    <button onclick="showPage('animals')">
+        🦎 Animals
+    </button>
+
+    <button onclick="showPage('shop')">
+        🛒 Shop
+    </button>
+
+    <button onclick="showPage('breeding')">
+        🧬 Breeding
+    </button>
+
+    <button onclick="showPage('incubator')">
+        🥚 Incubator
+    </button>
+
 </nav>
 
 
 <main>
 
-    <!-- HOME -->
-    <section id="home" class="page active">
 
-        <div class="hero">
+<!-- =========================================
+     HOME
+========================================= -->
 
-            <h2>Welcome to Reptile Breeding Simulation!</h2>
+<section id="home" class="page active">
 
-            <p>
-                Bouw je eigen reptielcollectie,
-                koop dieren en bereid je voor op breeding.
-            </p>
+    <div class="hero">
 
-            <button
-                class="next-day-button"
-                onclick="nextDay()"
-            >
-                ➡️ Volgende dag
-            </button>
-
-        </div>
-
-
-        <div class="info-grid">
-
-            <div class="card">
-
-                <h3>📅 Tijd</h3>
-
-                <p>
-                    Dag:
-                    <b id="homeDay">1</b>
-                </p>
-
-                <p>
-                    Maand:
-                    <b id="homeMonth">0</b>
-                </p>
-
-                <p>
-                    28 dagen = 1 maand
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>🦎 Collectie</h3>
-
-                <p>
-                    Dieren:
-                    <b id="homeAnimalCount">0</b>
-                </p>
-
-                <p>
-                    Eieren:
-                    <b id="eggCount">0</b>
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <h3>💰 Geld</h3>
-
-                <p>
-                    €<b id="homeMoney">1000</b>
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ANIMALS -->
-    <section id="animals" class="page">
-
-        <h2>🦎 Mijn dieren</h2>
-
-        <div
-            id="animalList"
-            class="animal-grid"
-        ></div>
-
-    </section>
-
-
-    <!-- SHOP -->
-    <section id="shop" class="page">
-
-        <h2>🛒 Reptile Shop</h2>
+        <h2>
+            Reptile Breeding Simulation
+        </h2>
 
         <p>
-            Kies een dier om toe te voegen
-            aan je collectie.
+            Bouw je eigen reptielcollectie
+            en bereid je dieren voor op breeding.
         </p>
 
-        <div
-            id="shopList"
-            class="shop-grid"
-        ></div>
+        <button
+            class="next-day-button"
+            onclick="nextDay()"
+        >
+            ➡️ Volgende dag
+        </button>
 
-    </section>
+    </div>
 
 
-    <!-- BREEDING -->
-    <section id="breeding" class="page">
-
-        <h2>🧬 Breeding</h2>
+    <div class="info-grid">
 
         <div class="card">
 
-            <h3>Breeding Center</h3>
+            <h3>📅 Tijd</h3>
 
             <p>
-                Het breeding-systeem komt in Part 5.
+                Dag:
+                <b id="homeDay">1</b>
             </p>
 
             <p>
-                Je zult later twee dieren kunnen
-                selecteren en hun genetica combineren.
+                Maand:
+                <b id="homeMonth">0</b>
+            </p>
+
+            <p>
+                28 dagen = 1 maand
             </p>
 
         </div>
 
-    </section>
-
-
-    <!-- INCUBATOR -->
-    <section id="incubator" class="page">
-
-        <h2>🥚 Incubator</h2>
 
         <div class="card">
 
-            <h3>Egg Incubator</h3>
+            <h3>🦎 Collectie</h3>
 
             <p>
-                Actieve eieren:
-                <b id="incubatorEggs">0</b>
+                Dieren:
+                <b id="homeAnimalCount">0</b>
             </p>
 
             <p>
-                Het incubator-systeem komt in Part 6.
+                Eieren:
+                <b id="eggCount">0</b>
             </p>
 
         </div>
 
-    </section>
+
+        <div class="card">
+
+            <h3>💰 Geld</h3>
+
+            <p>
+                €<b id="homeMoney">1000</b>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     ANIMALS
+========================================= -->
+
+<section id="animals" class="page">
+
+    <h2>
+        🦎 Mijn dieren
+    </h2>
+
+    <p>
+        Klik op een dier om alle informatie
+        te bekijken.
+    </p>
+
+    <div
+        id="animalList"
+        class="animal-grid"
+    ></div>
+
+</section>
+
+
+
+<!-- =========================================
+     SHOP
+========================================= -->
+
+<section id="shop" class="page">
+
+    <h2>
+        🛒 Reptile Shop
+    </h2>
+
+    <div
+        id="shopList"
+        class="shop-grid"
+    ></div>
+
+</section>
+
+
+
+<!-- =========================================
+     BREEDING
+========================================= -->
+
+<section id="breeding" class="page">
+
+    <h2>
+        🧬 Breeding
+    </h2>
+
+    <div class="card">
+
+        <h3>
+            Breeding Center
+        </h3>
+
+        <p>
+            Het echte breeding-systeem
+            komt later.
+        </p>
+
+        <p>
+            We gebruiken de informatie
+            van je dieren uit Part 3
+            voor de genetica.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     INCUBATOR
+========================================= -->
+
+<section id="incubator" class="page">
+
+    <h2>
+        🥚 Incubator
+    </h2>
+
+    <div class="card">
+
+        <h3>
+            Egg Incubator
+        </h3>
+
+        <p>
+            Actieve eieren:
+            <b id="incubatorEggs">0</b>
+        </p>
+
+        <p>
+            De incubator komt later.
+        </p>
+
+    </div>
+
+</section>
+
 
 </main>
+
+
+<!-- =========================================
+     ANIMAL MODAL
+========================================= -->
+
+<div
+    id="animalModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="close-button"
+            onclick="closeAnimalModal()"
+        >
+            ✕
+        </button>
+
+        <div id="animalDetails"></div>
+
+    </div>
+
+</div>
 
 
 <script src="script.js"></script>
