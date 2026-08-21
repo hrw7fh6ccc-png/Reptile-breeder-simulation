@@ -2,60 +2,156 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Reptile Breeding Simulation</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
 </head>
 
 <body>
 
 <header>
+
     <h1>🦎 Reptile Breeding Simulation</h1>
 
     <div class="stats-bar">
-        <span>📅 Dag <b id="day">1</b></span>
-        <span>🗓️ Maand <b id="month">0</b></span>
-        <span>💰 €<b id="money">1000</b></span>
-        <span>🦎 Dieren <b id="animalCount">0</b></span>
-        <span>🥚 Eieren <b id="eggCount">0</b></span>
+
+        <span>
+            📅 Dag
+            <b id="day">1</b>
+        </span>
+
+        <span>
+            🗓️ Maand
+            <b id="month">1</b>
+        </span>
+
+        <span>
+            💰 €
+            <b id="money">1000</b>
+        </span>
+
+        <span>
+            🦎 Dieren
+            <b id="animalCount">0</b>
+        </span>
+
+        <span>
+            🥚 Eieren
+            <b id="eggCount">0</b>
+        </span>
+
     </div>
+
 </header>
 
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
 <nav>
-    <button onclick="showPage('home')">🏠 Home</button>
-    <button onclick="showPage('animals')">🦎 Animals</button>
-    <button onclick="showPage('shop')">🛒 Shop</button>
-    <button onclick="showPage('breeding')">🧬 Breeding</button>
-    <button onclick="showPage('incubator')">🥚 Incubator</button>
+
+    <button
+        type="button"
+        onclick="openPage('home')"
+    >
+        🏠 Home
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('animals')"
+    >
+        🦎 Animals
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('shop')"
+    >
+        🛒 Shop
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('breeding')"
+    >
+        🧬 Breeding
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('incubator')"
+    >
+        🥚 Incubator
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('market')"
+    >
+        💰 Market
+    </button>
+
+    <button
+        type="button"
+        onclick="openPage('statistics')"
+    >
+        📊 Statistics
+    </button>
+
 </nav>
+
 
 <main>
 
-<!-- HOME -->
 
-<section id="home" class="page active">
+<!-- ==========================================
+     HOME
+========================================== -->
+
+<section
+    id="home"
+    class="page active"
+>
 
     <div class="hero">
 
-        <h2>Reptile Breeding Simulation</h2>
+        <h2>
+            🦎 Reptile Breeding Simulation
+        </h2>
 
         <p>
-            Bouw je collectie, laat je dieren
-            opgroeien en fok je eigen morphs.
+            Bouw je eigen reptielenfokkerij,
+            fok dieren en ontdek zeldzame morphs.
         </p>
 
+
         <button
+            type="button"
             class="next-day-button"
-            onclick="nextDay()"
+            onclick="goNextMonth()"
         >
-            ➡️ Volgende dag
+            ⏩ Volgende maand
         </button>
 
     </div>
 
+
     <div class="info-grid">
 
+
         <div class="card">
+
             <h3>📅 Tijd</h3>
 
             <p>
@@ -65,15 +161,18 @@
 
             <p>
                 Maand:
-                <b id="homeMonth">0</b>
+                <b id="homeMonth">1</b>
             </p>
 
             <p>
                 28 dagen = 1 maand
             </p>
+
         </div>
 
+
         <div class="card">
+
             <h3>🦎 Collectie</h3>
 
             <p>
@@ -85,14 +184,18 @@
                 Eieren:
                 <b id="homeEggCount">0</b>
             </p>
+
         </div>
 
+
         <div class="card">
+
             <h3>💰 Geld</h3>
 
             <p>
                 €<b id="homeMoney">1000</b>
             </p>
+
         </div>
 
     </div>
@@ -100,14 +203,20 @@
 </section>
 
 
-<!-- ANIMALS -->
 
-<section id="animals" class="page">
+<!-- ==========================================
+     ANIMALS
+========================================== -->
+
+<section
+    id="animals"
+    class="page"
+>
 
     <h2>🦎 Mijn dieren</h2>
 
     <p>
-        Klik op een dier voor meer informatie.
+        Hier staan al je reptielen.
     </p>
 
     <div
@@ -118,36 +227,61 @@
 </section>
 
 
-<!-- SHOP -->
 
-<section id="shop" class="page">
+<!-- ==========================================
+     SHOP
+========================================== -->
+
+<section
+    id="shop"
+    class="page"
+>
 
     <h2>🛒 Reptile Shop</h2>
+
+    <p>
+        Koop nieuwe dieren en upgrades.
+    </p>
 
     <div
         id="shopList"
         class="shop-grid"
     ></div>
 
+    <div
+        id="upgradeList"
+        class="shop-grid"
+    ></div>
+
 </section>
 
 
-<!-- BREEDING -->
 
-<section id="breeding" class="page">
+<!-- ==========================================
+     BREEDING
+========================================== -->
+
+<section
+    id="breeding"
+    class="page"
+>
 
     <h2>🧬 Breeding Center</h2>
 
+
     <div class="breeding-selection">
+
 
         <div class="parent-box">
 
             <h3>♂ Vader</h3>
 
             <div id="maleSelection">
+
                 <p>
                     Kies een mannetje.
                 </p>
+
             </div>
 
         </div>
@@ -163,9 +297,11 @@
             <h3>♀ Moeder</h3>
 
             <div id="femaleSelection">
+
                 <p>
                     Kies een vrouwtje.
                 </p>
+
             </div>
 
         </div>
@@ -175,7 +311,9 @@
 
     <div class="card">
 
-        <h3>🐍 Kies je ouders</h3>
+        <h3>
+            🐍 Kies je ouders
+        </h3>
 
         <div
             id="breedingAnimals"
@@ -187,14 +325,21 @@
 
     <div class="card breeding-result">
 
-        <h3>🧬 Breeding Result</h3>
+        <h3>
+            🧬 Breeding Result
+        </h3>
 
         <div id="breedingMessage">
-            Kies eerst een mannetje en vrouwtje.
+
+            Kies eerst een mannetje
+            en vrouwtje.
+
         </div>
+
 
         <button
             id="breedButton"
+            type="button"
             onclick="startBreeding()"
             disabled
         >
@@ -206,23 +351,139 @@
 </section>
 
 
-<!-- INCUBATOR -->
 
-<section id="incubator" class="page">
+<!-- ==========================================
+     INCUBATOR
+========================================== -->
+
+<section
+    id="incubator"
+    class="page"
+>
 
     <h2>🥚 Incubator</h2>
+
+    <p>
+        Hier worden je eieren uitgebroed.
+    </p>
 
     <div
         id="eggList"
         class="egg-grid"
     ></div>
 
+
+    <div
+        id="incubatorList"
+        class="egg-grid"
+    ></div>
+
 </section>
+
+
+
+<!-- ==========================================
+     MARKET
+========================================== -->
+
+<section
+    id="market"
+    class="page"
+>
+
+    <h2>💰 Reptile Market</h2>
+
+    <p>
+        Verkoop je dieren en verdien geld.
+    </p>
+
+    <div
+        id="marketList"
+        class="animal-grid"
+    ></div>
+
+</section>
+
+
+
+<!-- ==========================================
+     STATISTICS
+========================================== -->
+
+<section
+    id="statistics"
+    class="page"
+>
+
+    <h2>📊 Statistics</h2>
+
+
+    <div class="info-grid">
+
+
+        <div class="card">
+
+            <h3>🦎 Dieren geboren</h3>
+
+            <p>
+                <b id="animalsBorn">
+                    0
+                </b>
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>🥚 Eieren gelegd</h3>
+
+            <p>
+                <b id="eggsLaid">
+                    0
+                </b>
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>💰 Dieren verkocht</h3>
+
+            <p>
+                <b id="animalsSold">
+                    0
+                </b>
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>💵 Geld verdiend</h3>
+
+            <p>
+                €<b id="moneyEarned">
+                    0
+                </b>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 </main>
 
 
-<!-- ANIMAL MODAL -->
+
+<!-- ==========================================
+     ANIMAL MODAL
+========================================== -->
 
 <div
     id="animalModal"
@@ -231,21 +492,202 @@
 
     <div class="modal-content">
 
+
         <button
+            type="button"
             class="close-button"
             onclick="closeAnimalModal()"
         >
             ✕
         </button>
 
-        <div id="animalDetails"></div>
+
+        <div
+            id="animalDetails"
+        ></div>
 
     </div>
 
 </div>
 
 
-<script src="script.js"></script>
+
+<!-- ==========================================
+     BASIC NAVIGATION
+     Werkt ook als je grote JS tijdelijk
+     fouten heeft.
+========================================== -->
+
+<script>
+
+function openPage(pageName) {
+
+    const pages =
+        document.querySelectorAll(".page");
+
+
+    pages.forEach(function(page) {
+
+        page.classList.remove("active");
+
+        page.style.display = "none";
+
+    });
+
+
+    const page =
+        document.getElementById(pageName);
+
+
+    if (!page) {
+
+        console.error(
+            "Pagina niet gevonden:",
+            pageName
+        );
+
+        return;
+
+    }
+
+
+    page.classList.add("active");
+
+    page.style.display = "block";
+
+
+    /*
+       Probeer daarna de functies uit
+       je game-JavaScript te gebruiken.
+    */
+
+    try {
+
+        if (
+            pageName === "animals" &&
+            typeof renderFinalAnimals === "function"
+        ) {
+
+            renderFinalAnimals();
+
+        }
+
+
+        if (
+            pageName === "shop" &&
+            typeof renderShopPage === "function"
+        ) {
+
+            renderShopPage();
+
+        }
+
+
+        if (
+            pageName === "breeding" &&
+            typeof renderBreedingPage === "function"
+        ) {
+
+            renderBreedingPage();
+
+        }
+
+
+        if (
+            pageName === "incubator" &&
+            typeof renderMonthlyEggs === "function"
+        ) {
+
+            renderMonthlyEggs();
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Game functie fout:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   VOLGENDE MAAND
+========================================== */
+
+function goNextMonth() {
+
+    if (
+        typeof nextMonth === "function"
+    ) {
+
+        nextMonth();
+
+        return;
+
+    }
+
+
+    /*
+       Fallback als nextMonth nog niet
+       beschikbaar is.
+    */
+
+    const monthElement =
+        document.getElementById("month");
+
+
+    const homeMonth =
+        document.getElementById("homeMonth");
+
+
+    let month =
+        parseInt(
+            monthElement.textContent
+        ) || 1;
+
+
+    month++;
+
+
+    monthElement.textContent =
+        month;
+
+
+    homeMonth.textContent =
+        month;
+
+}
+
+
+/* ==========================================
+   START HOME
+========================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        openPage("home");
+
+    }
+);
+
+</script>
+
+
+
+<!-- ==========================================
+     JOUW GAME JAVASCRIPT
+========================================== -->
+
+<script src="./script.js"></script>
+
 
 </body>
 </html>
