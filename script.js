@@ -1,8 +1,7 @@
 // ============================================
 // REPTILE BREEDING SIMULATION
-// PART 4 - GENETICS
+// PART 5 - REAL BREEDING
 // ============================================
-
 
 let game = {
 
@@ -17,19 +16,13 @@ let game = {
 };
 
 
+let selectedMale = null;
+
+let selectedFemale = null;
+
+
 // ============================================
 // MORPH DATABASE
-// ============================================
-//
-// Allelen:
-//
-// AA = twee dominante allelen
-// Aa = één dominant + één recessief
-// aa = twee recessieve allelen
-//
-// Recessieve morphs worden pas zichtbaar
-// wanneer een dier twee kopieën heeft.
-//
 // ============================================
 
 const morphDatabase = {
@@ -59,7 +52,6 @@ const morphDatabase = {
 
     },
 
-
     "Leopard Gecko": {
 
         "Normal": {
@@ -85,7 +77,6 @@ const morphDatabase = {
 
     },
 
-
     "Corn Snake": {
 
         "Normal": {
@@ -102,7 +93,6 @@ const morphDatabase = {
 
     },
 
-
     "Bearded Dragon": {
 
         "Normal": {
@@ -112,7 +102,6 @@ const morphDatabase = {
         }
 
     },
-
 
     "Crested Gecko": {
 
@@ -207,7 +196,7 @@ const shopAnimals = [
 
 
 // ============================================
-// LOAD
+// LOAD GAME
 // ============================================
 
 function loadGame() {
@@ -217,30 +206,21 @@ function loadGame() {
             "reptileBreedingSimulation"
         );
 
-
     if (!saved) {
         return;
     }
 
-
     try {
 
-        game =
-            JSON.parse(saved);
-
+        game = JSON.parse(saved);
 
         if (!game.animals) {
             game.animals = [];
         }
 
-
         if (!game.eggs) {
             game.eggs = [];
         }
-
-
-        // Zorg dat oude dieren
-        // ook genetica krijgen.
 
         game.animals.forEach(
             animal => {
@@ -255,6 +235,33 @@ function loadGame() {
 
                 }
 
+                if (
+                    animal.birthDay === undefined
+                ) {
+
+                    animal.birthDay = 1;
+
+                }
+
+                if (
+                    animal.adultAgeMonths === undefined
+                ) {
+
+                    animal.adultAgeMonths =
+                        getAdultAge(
+                            animal.species
+                        );
+
+                }
+
+                if (
+                    animal.breedingCooldown === undefined
+                ) {
+
+                    animal.breedingCooldown = 0;
+
+                }
+
             }
         );
 
@@ -263,7 +270,7 @@ function loadGame() {
     catch (error) {
 
         console.error(
-            "Save kon niet geladen worden:",
+            "Save kon niet geladen worden.",
             error
         );
 
@@ -279,12 +286,43 @@ function loadGame() {
 function saveGame() {
 
     localStorage.setItem(
-
         "reptileBreedingSimulation",
-
         JSON.stringify(game)
-
     );
+
+}
+
+
+// ============================================
+// NAVIGATION
+// ============================================
+
+function showPage(pageName) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page => {
+                page.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+    const page =
+        document.getElementById(
+            pageName
+        );
+
+    if (page) {
+
+        page.classList.add(
+            "active"
+        );
+
+    }
+
+    updateUI();
 
 }
 
@@ -299,10 +337,7 @@ function createGenes(
 ) {
 
     const database =
-        morphDatabase[
-            species
-        ];
-
+        morphDatabase[species];
 
     if (
         database &&
@@ -317,68 +352,20 @@ function createGenes(
 
     }
 
-
     return {};
 
 }
 
 
 // ============================================
-// NEXT DAY
+// RANDOM SEX
 // ============================================
 
-function nextDay() {
+function randomSex() {
 
-    game.day++;
-
-    updateAnimalAges();
-
-    saveGame();
-
-    updateUI();
-
-}
-
-
-// ============================================
-// AGE
-// ============================================
-
-function updateAnimalAges() {
-
-    game.animals.forEach(
-        animal => {
-
-            const daysAlive =
-                game.day -
-                animal.birthDay;
-
-
-            animal.ageDays =
-                Math.max(
-                    0,
-                    daysAlive
-                );
-
-
-            animal.ageMonths =
-                Math.floor(
-                    daysAlive / 28
-                );
-
-
-            animal.isAdult =
-                animal.ageMonths >=
-                animal.adultAgeMonths;
-
-
-            animal.breedingReady =
-                animal.isAdult &&
-                animal.health ===
-                "Healthy";
-
-        }
-    );
+    return Math.random() < 0.5
+        ? "Male"
+        : "Female";
 
 }
 
@@ -430,14 +417,68 @@ function getAdultAge(species) {
 
 
 // ============================================
-// RANDOM SEX
+// AGE SYSTEM
 // ============================================
 
-function randomSex() {
+function updateAnimalAges() {
 
-    return Math.random() < 0.5
-        ? "Male"
-        : "Female";
+    game.animals.forEach(
+        animal => {
+
+            const daysAlive =
+                game.day -
+                animal.birthDay;
+
+            animal.ageDays =
+                Math.max(
+                    0,
+                    daysAlive
+                );
+
+            animal.ageMonths =
+                Math.floor(
+                    daysAlive / 28
+                );
+
+            animal.isAdult =
+                animal.ageMonths >=
+                animal.adultAgeMonths;
+
+            animal.breedingReady =
+                animal.isAdult &&
+                animal.health ===
+                "Healthy" &&
+                animal.breedingCooldown <= 0;
+
+            if (
+                animal.breedingCooldown > 0
+            ) {
+
+                animal.breedingCooldown--;
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================
+// NEXT DAY
+// ============================================
+
+function nextDay() {
+
+    game.day++;
+
+    updateAnimalAges();
+
+    updateEggs();
+
+    saveGame();
+
+    updateUI();
 
 }
 
@@ -446,20 +487,14 @@ function randomSex() {
 // BUY ANIMAL
 // ============================================
 
-function buyAnimal(
-    shopIndex
-) {
+function buyAnimal(index) {
 
     const item =
-        shopAnimals[
-            shopIndex
-        ];
-
+        shopAnimals[index];
 
     if (!item) {
         return;
     }
-
 
     if (
         game.money <
@@ -474,10 +509,8 @@ function buyAnimal(
 
     }
 
-
     game.money -=
         item.price;
-
 
     const animal = {
 
@@ -500,22 +533,20 @@ function buyAnimal(
         birthDay:
             game.day,
 
-        ageDays:
-            0,
+        ageDays: 0,
 
-        ageMonths:
-            0,
+        ageMonths: 0,
 
         adultAgeMonths:
             getAdultAge(
                 item.species
             ),
 
-        isAdult:
-            false,
+        isAdult: false,
 
-        breedingReady:
-            false,
+        breedingReady: false,
+
+        breedingCooldown: 0,
 
         health:
             "Healthy",
@@ -531,21 +562,17 @@ function buyAnimal(
 
     };
 
-
     game.animals.push(
         animal
     );
-
 
     saveGame();
 
     updateUI();
 
-
     alert(
         `${item.species} ` +
-        `(${item.morph}) ` +
-        `is toegevoegd!`
+        `(${item.morph}) gekocht!`
     );
 
 }
@@ -562,15 +589,11 @@ function renderShop() {
             "shopList"
         );
 
-
     if (!container) {
         return;
     }
 
-
-    container.innerHTML =
-        "";
-
+    container.innerHTML = "";
 
     shopAnimals.forEach(
         (item, index) => {
@@ -580,10 +603,8 @@ function renderShop() {
                     "div"
                 );
 
-
             card.className =
                 "card shop-card";
-
 
             card.innerHTML = `
 
@@ -596,8 +617,7 @@ function renderShop() {
                 </h3>
 
                 <p>
-                    Morph:
-                    <b>${item.morph}</b>
+                    ${item.morph}
                 </p>
 
                 <p class="price">
@@ -613,7 +633,6 @@ function renderShop() {
                 </button>
 
             `;
-
 
             container.appendChild(
                 card
@@ -640,7 +659,6 @@ function getAnimalIcon(
         return "🐍";
     }
 
-
     if (
         species ===
         "Corn Snake"
@@ -648,14 +666,13 @@ function getAnimalIcon(
         return "🐍";
     }
 
-
     return "🦎";
 
 }
 
 
 // ============================================
-// GENOTYPE TEXT
+// GENOTYPE
 // ============================================
 
 function genotypeText(
@@ -671,30 +688,24 @@ function genotypeText(
 
     }
 
-
     return alleles.join("");
 
 }
 
 
 // ============================================
-// MORPH FROM GENES
+// VISIBLE MORPH
 // ============================================
 
 function calculateVisibleMorph(
     animal
 ) {
 
-    const species =
-        animal.species;
-
-
     const genes =
         animal.genes || {};
 
-
     if (
-        species ===
+        animal.species ===
         "Ball Python"
     ) {
 
@@ -708,7 +719,6 @@ function calculateVisibleMorph(
 
         }
 
-
         if (
             genes.pastel &&
             genes.pastel.includes("p")
@@ -718,14 +728,13 @@ function calculateVisibleMorph(
 
         }
 
-
         return "Normal";
 
     }
 
 
     if (
-        species ===
+        animal.species ===
         "Leopard Gecko"
     ) {
 
@@ -739,7 +748,6 @@ function calculateVisibleMorph(
 
         }
 
-
         if (
             genes.snow &&
             genes.snow.includes("s")
@@ -749,14 +757,13 @@ function calculateVisibleMorph(
 
         }
 
-
         return "Normal";
 
     }
 
 
     if (
-        species ===
+        animal.species ===
         "Corn Snake"
     ) {
 
@@ -770,7 +777,6 @@ function calculateVisibleMorph(
 
         }
 
-
         return "Normal";
 
     }
@@ -782,45 +788,133 @@ function calculateVisibleMorph(
 
 
 // ============================================
-// RENDER ANIMALS
+// SELECT MALE
 // ============================================
 
-function renderAnimals() {
+function selectMale(id) {
+
+    const animal =
+        game.animals.find(
+            a => a.id === id
+        );
+
+    if (!animal) {
+        return;
+    }
+
+    if (
+        animal.sex !== "Male"
+    ) {
+
+        alert(
+            "Dit dier is geen mannetje."
+        );
+
+        return;
+
+    }
+
+    if (
+        !animal.breedingReady
+    ) {
+
+        alert(
+            "Dit mannetje is nog niet klaar om te breeden."
+        );
+
+        return;
+
+    }
+
+    selectedMale =
+        animal;
+
+    updateBreedingUI();
+
+}
+
+
+// ============================================
+// SELECT FEMALE
+// ============================================
+
+function selectFemale(id) {
+
+    const animal =
+        game.animals.find(
+            a => a.id === id
+        );
+
+    if (!animal) {
+        return;
+    }
+
+    if (
+        animal.sex !== "Female"
+    ) {
+
+        alert(
+            "Dit dier is geen vrouwtje."
+        );
+
+        return;
+
+    }
+
+    if (
+        !animal.breedingReady
+    ) {
+
+        alert(
+            "Dit vrouwtje is nog niet klaar om te breeden."
+        );
+
+        return;
+
+    }
+
+    selectedFemale =
+        animal;
+
+    updateBreedingUI();
+
+}
+
+
+// ============================================
+// BREEDING LIST
+// ============================================
+
+function renderBreedingAnimals() {
 
     const container =
         document.getElementById(
-            "animalList"
+            "breedingAnimals"
         );
-
 
     if (!container) {
         return;
     }
 
+    container.innerHTML = "";
 
-    container.innerHTML =
-        "";
-
+    const readyAnimals =
+        game.animals.filter(
+            animal =>
+                animal.isAdult &&
+                animal.health === "Healthy"
+        );
 
     if (
-        game.animals.length === 0
+        readyAnimals.length === 0
     ) {
 
         container.innerHTML = `
 
-            <div class="card">
-
-                <h3>
-                    Geen dieren
-                </h3>
-
-                <p>
-                    Ga naar de shop
-                    om je eerste reptiel
-                    te kopen.
-                </p>
-
-            </div>
+            <p>
+                Je hebt nog geen volwassen
+                dieren die kunnen breeden.
+            </p>
 
         `;
 
@@ -828,66 +922,79 @@ function renderAnimals() {
 
     }
 
-
-    game.animals.forEach(
-        (animal, index) => {
+    readyAnimals.forEach(
+        animal => {
 
             const card =
                 document.createElement(
                     "div"
                 );
 
-
             card.className =
-                "animal-card";
+                "breeding-animal";
 
-
-            card.onclick =
-                () => openAnimalModal(
-                    animal.id
-                );
-
+            const readyText =
+                animal.breedingReady
+                    ? "Ready"
+                    : "Cooldown";
 
             card.innerHTML = `
 
-                <div class="animal-icon">
+                <b>
                     ${getAnimalIcon(
                         animal.species
                     )}
-                </div>
-
-                <div class="animal-name">
                     ${animal.name}
-                </div>
+                </b>
 
                 <p>
                     ${animal.species}
                 </p>
 
                 <p>
-                    <b>Morph:</b>
                     ${calculateVisibleMorph(
                         animal
                     )}
                 </p>
 
                 <p>
-                    <b>Sex:</b>
                     ${animal.sex}
                 </p>
 
                 <p>
-                    <b>Age:</b>
-                    ${animal.ageMonths}
-                    maanden
+                    ${readyText}
                 </p>
 
-                <p>
-                    🧬 Genetica aanwezig
-                </p>
+                ${
+                    animal.sex === "Male"
+                    ?
+
+                    `
+                    <button
+                        class="male-button"
+                        onclick="
+                            selectMale(${animal.id})
+                        "
+                    >
+                        ♂ Kies als vader
+                    </button>
+                    `
+
+                    :
+
+                    `
+                    <button
+                        class="female-button"
+                        onclick="
+                            selectFemale(${animal.id})
+                        "
+                    >
+                        ♀ Kies als moeder
+                    </button>
+                    `
+                }
 
             `;
-
 
             container.appendChild(
                 card
@@ -900,18 +1007,749 @@ function renderAnimals() {
 
 
 // ============================================
-// OPEN ANIMAL
+// BREEDING UI
 // ============================================
 
-function openAnimalModal(
-    id
+function updateBreedingUI() {
+
+    const maleBox =
+        document.getElementById(
+            "maleSelection"
+        );
+
+    const femaleBox =
+        document.getElementById(
+            "femaleSelection"
+        );
+
+    const button =
+        document.getElementById(
+            "breedButton"
+        );
+
+    const message =
+        document.getElementById(
+            "breedingMessage"
+        );
+
+
+    if (selectedMale) {
+
+        maleBox.innerHTML = `
+
+            <div class="animal-icon">
+                ${getAnimalIcon(
+                    selectedMale.species
+                )}
+            </div>
+
+            <b>
+                ${selectedMale.name}
+            </b>
+
+            <p>
+                ${selectedMale.species}
+            </p>
+
+            <p>
+                ${calculateVisibleMorph(
+                    selectedMale
+                )}
+            </p>
+
+        `;
+
+    }
+
+    else {
+
+        maleBox.innerHTML =
+            "<p>Kies een mannetje.</p>";
+
+    }
+
+
+    if (selectedFemale) {
+
+        femaleBox.innerHTML = `
+
+            <div class="animal-icon">
+                ${getAnimalIcon(
+                    selectedFemale.species
+                )}
+            </div>
+
+            <b>
+                ${selectedFemale.name}
+            </b>
+
+            <p>
+                ${selectedFemale.species}
+            </p>
+
+            <p>
+                ${calculateVisibleMorph(
+                    selectedFemale
+                )}
+            </p>
+
+        `;
+
+    }
+
+    else {
+
+        femaleBox.innerHTML =
+            "<p>Kies een vrouwtje.</p>";
+
+    }
+
+
+    button.disabled =
+        !selectedMale ||
+        !selectedFemale;
+
+
+    if (
+        selectedMale &&
+        selectedFemale
+    ) {
+
+        if (
+            selectedMale.species !==
+            selectedFemale.species
+        ) {
+
+            message.innerHTML = `
+
+                <div class="warning">
+                    ❌ Deze twee dieren zijn
+                    verschillende soorten.
+                    Kies dezelfde soort.
+                </div>
+
+            `;
+
+            button.disabled = true;
+
+        }
+
+        else {
+
+            message.innerHTML = `
+
+                <div class="success">
+
+                    ✅ ${selectedMale.name}
+                    ×
+                    ${selectedFemale.name}
+
+                    <br><br>
+
+                    Soort:
+                    ${selectedMale.species}
+
+                    <br>
+
+                    Mogelijke nakomelingen
+                    worden via genetica bepaald.
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+    renderBreedingAnimals();
+
+}
+
+
+// ============================================
+// TAKE ALLELE FROM PARENT
+// ============================================
+
+function inheritAllele(
+    parentAlleles
 ) {
+
+    if (
+        !parentAlleles ||
+        parentAlleles.length !== 2
+    ) {
+
+        return null;
+
+    }
+
+    return parentAlleles[
+        Math.floor(
+            Math.random() * 2
+        )
+    ];
+
+}
+
+
+// ============================================
+// CREATE CHILD GENES
+// ============================================
+
+function createChildGenes(
+    father,
+    mother
+) {
+
+    const childGenes = {};
+
+    const geneNames =
+        new Set([
+            ...Object.keys(
+                father.genes || {}
+            ),
+            ...Object.keys(
+                mother.genes || {}
+            )
+        ]);
+
+
+    geneNames.forEach(
+        geneName => {
+
+            const fatherAlleles =
+                father.genes[
+                    geneName
+                ] || ["A", "A"];
+
+            const motherAlleles =
+                mother.genes[
+                    geneName
+                ] || ["A", "A"];
+
+
+            const fatherAllele =
+                inheritAllele(
+                    fatherAlleles
+                );
+
+            const motherAllele =
+                inheritAllele(
+                    motherAlleles
+                );
+
+
+            childGenes[
+                geneName
+            ] = [
+
+                fatherAllele,
+
+                motherAllele
+
+            ];
+
+        }
+    );
+
+
+    return childGenes;
+
+}
+
+
+// ============================================
+// BREEDING RESULT
+// ============================================
+
+function createEgg(
+    father,
+    mother
+) {
+
+    const genes =
+        createChildGenes(
+            father,
+            mother
+        );
+
+
+    const fakeAnimal = {
+
+        species:
+            father.species,
+
+        morph:
+            "Unknown",
+
+        genes:
+            genes
+
+    };
+
+
+    const predictedMorph =
+        calculateVisibleMorph(
+            fakeAnimal
+        );
+
+
+    const egg = {
+
+        id:
+            Date.now() +
+            Math.random(),
+
+        species:
+            father.species,
+
+        genes:
+            genes,
+
+        predictedMorph:
+            predictedMorph,
+
+        fatherId:
+            father.id,
+
+        motherId:
+            mother.id,
+
+        createdDay:
+            game.day,
+
+        hatchDay:
+            game.day + 60,
+
+        status:
+            "Incubating"
+
+    };
+
+
+    return egg;
+
+}
+
+
+// ============================================
+// START BREEDING
+// ============================================
+
+function startBreeding() {
+
+    if (
+        !selectedMale ||
+        !selectedFemale
+    ) {
+
+        alert(
+            "Selecteer eerst twee ouders."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        selectedMale.species !==
+        selectedFemale.species
+    ) {
+
+        alert(
+            "De dieren moeten dezelfde soort zijn."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !selectedMale.breedingReady ||
+        !selectedFemale.breedingReady
+    ) {
+
+        alert(
+            "Een van de dieren is niet klaar."
+        );
+
+        return;
+
+    }
+
+
+    // kleine kans dat breeding mislukt
+
+    const successChance = 0.90;
+
+
+    if (
+        Math.random() >
+        successChance
+    ) {
+
+        selectedMale.breedingCooldown =
+            14;
+
+        selectedFemale.breedingCooldown =
+            14;
+
+        alert(
+            "De breeding is helaas mislukt."
+        );
+
+        selectedMale = null;
+
+        selectedFemale = null;
+
+        saveGame();
+
+        updateUI();
+
+        return;
+
+    }
+
+
+    const egg =
+        createEgg(
+            selectedMale,
+            selectedFemale
+        );
+
+
+    game.eggs.push(
+        egg
+    );
+
+
+    selectedMale.breedingCooldown =
+        14;
+
+    selectedFemale.breedingCooldown =
+        28;
+
+
+    saveGame();
+
+    updateUI();
+
+
+    alert(
+        `🥚 Breeding gelukt!\n\n` +
+        `Er is een ei gelegd!\n\n` +
+        `Mogelijke morph: ` +
+        `${egg.predictedMorph}`
+    );
+
+
+    selectedMale = null;
+
+    selectedFemale = null;
+
+    updateBreedingUI();
+
+}
+
+
+// ============================================
+// EGG SYSTEM
+// ============================================
+
+function updateEggs() {
+
+    game.eggs.forEach(
+        egg => {
+
+            if (
+                game.day >=
+                egg.hatchDay
+            ) {
+
+                egg.status =
+                    "Ready to hatch";
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================
+// INCUBATOR
+// ============================================
+
+function renderEggs() {
+
+    const container =
+        document.getElementById(
+            "eggList"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+    if (
+        game.eggs.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <h3>
+                    Geen eieren
+                </h3>
+
+                <p>
+                    Breed twee volwassen dieren
+                    om een ei te krijgen.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    game.eggs.forEach(
+        (egg, index) => {
+
+            const daysLeft =
+                Math.max(
+                    0,
+                    egg.hatchDay -
+                    game.day
+                );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "egg-card";
+
+
+            card.innerHTML = `
+
+                <div class="egg-icon">
+                    🥚
+                </div>
+
+                <h3>
+                    ${egg.species} Egg
+                </h3>
+
+                <p>
+                    Mogelijke morph:
+                    <b>
+                        ${egg.predictedMorph}
+                    </b>
+                </p>
+
+                <p>
+                    Uitkomen:
+                    dag ${egg.hatchDay}
+                </p>
+
+                <p>
+                    ${daysLeft}
+                    dagen over
+                </p>
+
+                ${
+                    daysLeft === 0
+
+                    ?
+
+                    `
+                    <button
+                        onclick="
+                            hatchEgg(${index})
+                        "
+                    >
+                        🐣 Ei uitbroeden
+                    </button>
+                    `
+
+                    :
+
+                    `
+                    <button disabled>
+                        🥚 Incubating
+                    </button>
+                    `
+                }
+
+            `;
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================
+// HATCH EGG
+// ============================================
+
+function hatchEgg(index) {
+
+    const egg =
+        game.eggs[index];
+
+    if (!egg) {
+        return;
+    }
+
+
+    if (
+        game.day <
+        egg.hatchDay
+    ) {
+
+        alert(
+            "Dit ei is nog niet klaar."
+        );
+
+        return;
+
+    }
+
+
+    const father =
+        game.animals.find(
+            animal =>
+                animal.id ===
+                egg.fatherId
+        );
+
+
+    const mother =
+        game.animals.find(
+            animal =>
+                animal.id ===
+                egg.motherId
+        );
+
+
+    const child = {
+
+        id:
+            Date.now() +
+            Math.random(),
+
+        name:
+            egg.species +
+            " Baby",
+
+        species:
+            egg.species,
+
+        morph:
+            calculateVisibleMorph({
+                species:
+                    egg.species,
+
+                genes:
+                    egg.genes
+            }),
+
+        sex:
+            randomSex(),
+
+        birthDay:
+            game.day,
+
+        ageDays: 0,
+
+        ageMonths: 0,
+
+        adultAgeMonths:
+            getAdultAge(
+                egg.species
+            ),
+
+        isAdult: false,
+
+        breedingReady: false,
+
+        breedingCooldown: 0,
+
+        health:
+            "Healthy",
+
+        purchasePrice: 0,
+
+        genes:
+            egg.genes,
+
+        fatherId:
+            father
+                ? father.id
+                : null,
+
+        motherId:
+            mother
+                ? mother.id
+                : null
+
+    };
+
+
+    game.animals.push(
+        child
+    );
+
+
+    game.eggs.splice(
+        index,
+        1
+    );
+
+
+    saveGame();
+
+    updateUI();
+
+
+    alert(
+        `🐣 Het ei is uitgekomen!\n\n` +
+        `${child.species}\n` +
+        `Morph: ${child.morph}\n` +
+        `Sex: ${child.sex}`
+    );
+
+}
+
+
+// ============================================
+// ANIMAL MODAL
+// ============================================
+
+function openAnimalModal(id) {
 
     const animal =
         game.animals.find(
             a => a.id === id
         );
-
 
     if (!animal) {
         return;
@@ -927,24 +1765,22 @@ function openAnimalModal(
     let genesHTML = "";
 
 
-    const genes =
-        animal.genes || {};
-
-
-    Object.keys(genes).forEach(
-        geneName => {
+    Object.keys(
+        animal.genes || {}
+    ).forEach(
+        gene => {
 
             genesHTML += `
 
                 <div class="gene">
 
                     <span>
-                        ${geneName}
+                        ${gene}
                     </span>
 
                     <b>
                         ${genotypeText(
-                            genes[geneName]
+                            animal.genes[gene]
                         )}
                     </b>
 
@@ -975,8 +1811,9 @@ function openAnimalModal(
 
         <div class="detail-row">
             <span class="detail-title">
-                Species
+                Soort
             </span>
+
             <span>
                 ${animal.species}
             </span>
@@ -984,8 +1821,9 @@ function openAnimalModal(
 
         <div class="detail-row">
             <span class="detail-title">
-                Visible Morph
+                Morph
             </span>
+
             <span>
                 ${calculateVisibleMorph(
                     animal
@@ -995,8 +1833,9 @@ function openAnimalModal(
 
         <div class="detail-row">
             <span class="detail-title">
-                Sex
+                Geslacht
             </span>
+
             <span>
                 ${animal.sex}
             </span>
@@ -1004,8 +1843,9 @@ function openAnimalModal(
 
         <div class="detail-row">
             <span class="detail-title">
-                Age
+                Leeftijd
             </span>
+
             <span>
                 ${animal.ageMonths}
                 maanden
@@ -1016,10 +1856,25 @@ function openAnimalModal(
 
         <div class="detail-row">
             <span class="detail-title">
-                Health
+                Gezondheid
             </span>
+
             <span>
                 ${animal.health}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-title">
+                Breeding
+            </span>
+
+            <span>
+                ${
+                    animal.breedingReady
+                    ? "Ready"
+                    : "Niet ready"
+                }
             </span>
         </div>
 
@@ -1030,29 +1885,6 @@ function openAnimalModal(
             </h3>
 
             ${genesHTML}
-
-        </div>
-
-        <div class="card">
-
-            <h3>
-                ℹ️ Genetica
-            </h3>
-
-            <p>
-                A = dominante versie
-            </p>
-
-            <p>
-                a = recessieve versie
-            </p>
-
-            <p>
-                Bij recessieve morphs moet
-                een dier twee recessieve
-                allelen hebben om de morph
-                zichtbaar te maken.
-            </p>
 
         </div>
 
@@ -1088,6 +1920,120 @@ function closeAnimalModal() {
 
 
 // ============================================
+// RENDER ANIMALS
+// ============================================
+
+function renderAnimals() {
+
+    const container =
+        document.getElementById(
+            "animalList"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+
+    if (
+        game.animals.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <h3>
+                    Geen dieren
+                </h3>
+
+                <p>
+                    Ga naar de shop.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    game.animals.forEach(
+        animal => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "animal-card";
+
+            card.onclick =
+                () =>
+                    openAnimalModal(
+                        animal.id
+                    );
+
+
+            card.innerHTML = `
+
+                <div class="animal-icon">
+                    ${getAnimalIcon(
+                        animal.species
+                    )}
+                </div>
+
+                <div class="animal-name">
+                    ${animal.name}
+                </div>
+
+                <p>
+                    ${animal.species}
+                </p>
+
+                <p>
+                    🧬
+                    ${calculateVisibleMorph(
+                        animal
+                    )}
+                </p>
+
+                <p>
+                    ${animal.sex}
+                </p>
+
+                <p>
+                    ${animal.ageMonths}
+                    maanden
+                </p>
+
+                <p>
+                    ${
+                        animal.breedingReady
+                        ? "🟢 Breeding ready"
+                        : "🟡 Nog niet ready"
+                    }
+                </p>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================
 // UPDATE UI
 // ============================================
 
@@ -1118,6 +2064,18 @@ function updateUI() {
 
 
     document.getElementById(
+        "animalCount"
+    ).textContent =
+        game.animals.length;
+
+
+    document.getElementById(
+        "eggCount"
+    ).textContent =
+        game.eggs.length;
+
+
+    document.getElementById(
         "homeDay"
     ).textContent =
         game.day;
@@ -1130,9 +2088,9 @@ function updateUI() {
 
 
     document.getElementById(
-        "animalCount"
+        "homeMoney"
     ).textContent =
-        game.animals.length;
+        game.money;
 
 
     document.getElementById(
@@ -1142,19 +2100,7 @@ function updateUI() {
 
 
     document.getElementById(
-        "homeMoney"
-    ).textContent =
-        game.money;
-
-
-    document.getElementById(
-        "eggCount"
-    ).textContent =
-        game.eggs.length;
-
-
-    document.getElementById(
-        "incubatorEggs"
+        "homeEggCount"
     ).textContent =
         game.eggs.length;
 
@@ -1163,15 +2109,23 @@ function updateUI() {
 
     renderShop();
 
+    renderBreedingAnimals();
+
+    renderEggs();
+
+    updateBreedingUI();
+
 }
 
 
 // ============================================
-// START
+// START GAME
 // ============================================
 
 loadGame();
 
 updateAnimalAges();
+
+updateEggs();
 
 updateUI();
