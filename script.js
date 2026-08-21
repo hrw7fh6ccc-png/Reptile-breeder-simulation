@@ -1,17 +1,10 @@
-/* =========================================================
-   REPTILE BREEDING SIMULATION
-   COMPLETE GAME SCRIPT
-   Compatible with the current index.html + style.css
-========================================================= */
-
 "use strict";
 
 /* =========================================================
-   GAME DATA
+   REPTILE BREEDING SIMULATION
 ========================================================= */
 
-const SAVE_KEY = "reptile_breeding_simulation_v1";
-
+const SAVE_KEY = "reptile_breeding_simulation_v2";
 const DAYS_PER_MONTH = 28;
 
 
@@ -22,191 +15,191 @@ const DAYS_PER_MONTH = 28;
 const SPECIES = {
 
     "Ball Python": {
-        price: 150,
+        basePrice: 150,
         incubation: [1, 2],
         adultAge: 30,
         morphs: {
-            Normal: { type: "normal" },
-            Pastel: { type: "incomplete" },
-            Mojave: { type: "incomplete" },
-            Banana: { type: "incomplete" },
-            Enchi: { type: "incomplete" },
-            Spider: { type: "incomplete" },
-            Albino: { type: "recessive" },
-            Pied: { type: "recessive" },
-            Clown: { type: "recessive" },
-            Axanthic: { type: "recessive" },
-            "Albino Pied": { type: "recessive" },
-            "Pastel Pied": { type: "incomplete" }
+            Normal: 1,
+            Pastel: 1.5,
+            Mojave: 1.7,
+            Banana: 2,
+            Enchi: 1.5,
+            Spider: 1.8,
+            Albino: 2.5,
+            Pied: 3,
+            Clown: 3.5,
+            Axanthic: 3,
+            "Albino Pied": 5,
+            "Pastel Pied": 4
         }
     },
 
     "Leopard Gecko": {
-        price: 100,
+        basePrice: 100,
         incubation: [1, 2],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Tangerine: { type: "incomplete" },
-            "Mack Snow": { type: "incomplete" },
-            Eclipse: { type: "recessive" },
-            Blizzard: { type: "recessive" },
-            "Patternless": { type: "recessive" },
-            Albino: { type: "recessive" },
-            "Mack Snow Albino": { type: "recessive" },
-            "Tangerine Eclipse": { type: "recessive" }
+            Normal: 1,
+            Tangerine: 1.5,
+            "Mack Snow": 1.7,
+            Eclipse: 2,
+            Blizzard: 2,
+            Patternless: 2,
+            Albino: 2,
+            "Mack Snow Albino": 3,
+            "Tangerine Eclipse": 3
         }
     },
 
     "Corn Snake": {
-        price: 120,
+        basePrice: 120,
         incubation: [1, 3],
         adultAge: 24,
         morphs: {
-            Normal: { type: "normal" },
-            Amelanistic: { type: "recessive" },
-            Anery: { type: "recessive" },
-            Snow: { type: "recessive" },
-            Hypo: { type: "recessive" },
-            Motley: { type: "recessive" },
-            Stripe: { type: "recessive" },
-            Tessera: { type: "incomplete" }
+            Normal: 1,
+            Amelanistic: 1.5,
+            Anery: 1.5,
+            Snow: 2,
+            Hypo: 1.7,
+            Motley: 1.5,
+            Stripe: 1.5,
+            Tessera: 2
         }
     },
 
     "Bearded Dragon": {
-        price: 200,
+        basePrice: 200,
         incubation: [2, 3],
         adultAge: 18,
         morphs: {
-            Normal: { type: "normal" },
-            Hypo: { type: "recessive" },
-            Translucent: { type: "recessive" },
-            Leatherback: { type: "incomplete" },
-            Dunner: { type: "incomplete" },
-            Witblits: { type: "recessive" },
-            "Hypo Translucent": { type: "recessive" },
-            "Leatherback Hypo": { type: "incomplete" }
+            Normal: 1,
+            Hypo: 1.5,
+            Translucent: 2,
+            Leatherback: 2,
+            Dunner: 2,
+            Witblits: 3,
+            "Hypo Translucent": 3,
+            "Leatherback Hypo": 3
         }
     },
 
     "Crested Gecko": {
-        price: 180,
+        basePrice: 180,
         incubation: [1, 3],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Flame: { type: "incomplete" },
-            Harlequin: { type: "incomplete" },
-            Dalmatian: { type: "incomplete" },
-            Pinstripe: { type: "incomplete" },
-            "Lilly White": { type: "dominant" },
-            "Lilly White Flame": { type: "dominant" },
-            "Dalmatian Harlequin": { type: "incomplete" }
+            Normal: 1,
+            Flame: 1.4,
+            Harlequin: 1.6,
+            Dalmatian: 1.8,
+            Pinstripe: 2,
+            "Lilly White": 3,
+            "Lilly White Flame": 4,
+            "Dalmatian Harlequin": 3
         }
     },
 
     "Gargoyle Gecko": {
-        price: 220,
+        basePrice: 220,
         incubation: [1, 3],
         adultAge: 15,
         morphs: {
-            Normal: { type: "normal" },
-            "Orange Stripe": { type: "incomplete" },
-            "Red Stripe": { type: "incomplete" },
-            Reticulated: { type: "incomplete" },
-            "Orange Reticulated": { type: "incomplete" }
+            Normal: 1,
+            "Orange Stripe": 1.8,
+            "Red Stripe": 2,
+            Reticulated: 1.8,
+            "Orange Reticulated": 2.5
         }
     },
 
     "African Fat-Tailed Gecko": {
-        price: 170,
+        basePrice: 170,
         incubation: [1, 2],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Albino: { type: "recessive" },
-            Oreo: { type: "recessive" },
-            Patternless: { type: "recessive" },
-            Whiteout: { type: "dominant" },
-            "Whiteout Oreo": { type: "dominant" }
+            Normal: 1,
+            Albino: 2,
+            Oreo: 2.5,
+            Patternless: 2,
+            Whiteout: 3,
+            "Whiteout Oreo": 4
         }
     },
 
     "Reticulated Python": {
-        price: 600,
+        basePrice: 600,
         incubation: [2, 4],
         adultAge: 36,
         morphs: {
-            Normal: { type: "normal" },
-            Albino: { type: "recessive" },
-            Tiger: { type: "incomplete" },
-            Lavender: { type: "recessive" },
-            Motley: { type: "incomplete" },
-            "Albino Tiger": { type: "recessive" },
-            "Lavender Albino": { type: "recessive" }
+            Normal: 1,
+            Albino: 2.5,
+            Tiger: 1.8,
+            Lavender: 3,
+            Motley: 1.8,
+            "Albino Tiger": 4,
+            "Lavender Albino": 5
         }
     },
 
     "Green Anaconda": {
-        price: 700,
+        basePrice: 700,
         incubation: [2, 4],
         adultAge: 36,
         morphs: {
-            Normal: { type: "normal" },
-            "High Yellow": { type: "incomplete" },
-            "Blue Line": { type: "incomplete" }
+            Normal: 1,
+            "High Yellow": 1.8,
+            "Blue Line": 2.5
         }
     },
 
     "Red-Eared Slider": {
-        price: 150,
+        basePrice: 150,
         incubation: [2, 4],
         adultAge: 24,
         morphs: {
-            Normal: { type: "normal" },
-            Hypo: { type: "recessive" },
-            "Pastel Green": { type: "incomplete" }
+            Normal: 1,
+            Hypo: 2,
+            "Pastel Green": 2
         }
     },
 
     "Panther Chameleon": {
-        price: 350,
+        basePrice: 350,
         incubation: [2, 4],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Blue: { type: "incomplete" },
-            Red: { type: "incomplete" },
-            Green: { type: "incomplete" },
-            Yellow: { type: "incomplete" },
-            "Blue Bar": { type: "incomplete" },
-            "Red Bar": { type: "incomplete" }
+            Normal: 1,
+            Blue: 1.7,
+            Red: 1.8,
+            Green: 1.4,
+            Yellow: 1.5,
+            "Blue Bar": 2,
+            "Red Bar": 2
         }
     },
 
     "Veiled Chameleon": {
-        price: 250,
+        basePrice: 250,
         incubation: [1, 3],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Turquoise: { type: "incomplete" },
-            Yellow: { type: "incomplete" },
-            Blue: { type: "incomplete" },
-            "High Yellow": { type: "incomplete" }
+            Normal: 1,
+            Turquoise: 1.7,
+            Yellow: 1.5,
+            Blue: 2,
+            "High Yellow": 1.8
         }
     },
 
     "Jackson's Chameleon": {
-        price: 300,
+        basePrice: 300,
         incubation: [2, 4],
         adultAge: 12,
         morphs: {
-            Normal: { type: "normal" },
-            Green: { type: "incomplete" },
-            Blue: { type: "incomplete" },
-            Yellow: { type: "incomplete" }
+            Normal: 1,
+            Green: 1.3,
+            Blue: 2,
+            Yellow: 1.7
         }
     }
 
@@ -214,92 +207,45 @@ const SPECIES = {
 
 
 /* =========================================================
-   GAME STATE
+   GAME
 ========================================================= */
 
 let game = {
-
     money: 1000,
-
     day: 1,
-
     month: 1,
-
     animals: [],
-
     eggs: [],
-
     statistics: {
-
         animalsBorn: 0,
-
         eggsLaid: 0,
-
         animalsSold: 0,
-
         moneyEarned: 0
-
     }
-
 };
 
-
-/* =========================================================
-   BREEDING SELECTION
-========================================================= */
-
 let selectedMale = null;
-
 let selectedFemale = null;
 
 
 /* =========================================================
-   HELPERS
+   BASIC HELPERS
 ========================================================= */
 
-function randomItem(array) {
-
-    if (!array || array.length === 0) {
-        return null;
-    }
-
-    return array[
-        Math.floor(
-            Math.random() * array.length
-        )
-    ];
-
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
-function randomGender() {
-
-    return Math.random() < 0.5
-        ? "Male"
-        : "Female";
-
+function pick(array) {
+    return array[Math.floor(Math.random() * array.length)];
 }
 
-
-function randomNumber(min, max) {
-
-    return Math.floor(
-        Math.random() *
-        (max - min + 1)
-    ) + min;
-
+function genderText(gender) {
+    return gender === "Male" ? "♂️ Male" : "♀️ Female";
 }
 
-
-function capitalize(text) {
-
-    if (!text) {
-        return "";
-    }
-
-    return text.charAt(0).toUpperCase() +
-        text.slice(1);
-
+function adultAge(species) {
+    return SPECIES[species].adultAge;
 }
 
 
@@ -308,313 +254,430 @@ function capitalize(text) {
 ========================================================= */
 
 function saveGame() {
-
-    try {
-
-        localStorage.setItem(
-            SAVE_KEY,
-            JSON.stringify(game)
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Save error:",
-            error
-        );
-
-    }
-
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(game)
+    );
 }
-
 
 function loadGame() {
 
+    const saved =
+        localStorage.getItem(SAVE_KEY);
+
+    if (!saved) return;
+
     try {
 
-        const saved =
-            localStorage.getItem(
-                SAVE_KEY
-            );
+        const data = JSON.parse(saved);
 
-        if (!saved) {
-            return;
-        }
+        game.money = data.money ?? 1000;
+        game.day = data.day ?? 1;
+        game.month = data.month ?? 1;
+        game.animals = data.animals ?? [];
+        game.eggs = data.eggs ?? [];
 
-        const data =
-            JSON.parse(saved);
-
-        if (!data) {
-            return;
-        }
-
-        game = {
-
-            money:
-                Number(data.money) || 1000,
-
-            day:
-                Number(data.day) || 1,
-
-            month:
-                Number(data.month) || 1,
-
-            animals:
-                Array.isArray(data.animals)
-                    ? data.animals
-                    : [],
-
-            eggs:
-                Array.isArray(data.eggs)
-                    ? data.eggs
-                    : [],
-
-            statistics: {
-
-                animalsBorn:
-                    Number(
-                        data.statistics?.animalsBorn
-                    ) || 0,
-
-                eggsLaid:
-                    Number(
-                        data.statistics?.eggsLaid
-                    ) || 0,
-
-                animalsSold:
-                    Number(
-                        data.statistics?.animalsSold
-                    ) || 0,
-
-                moneyEarned:
-                    Number(
-                        data.statistics?.moneyEarned
-                    ) || 0
-
-            }
-
-        };
+        game.statistics =
+            data.statistics ?? {
+                animalsBorn: 0,
+                eggsLaid: 0,
+                animalsSold: 0,
+                moneyEarned: 0
+            };
 
     } catch (error) {
 
-        console.error(
-            "Load error:",
-            error
-        );
+        console.error(error);
 
     }
-
 }
 
 
 /* =========================================================
-   ANIMAL CREATION
+   ANIMAL
 ========================================================= */
 
 function createAnimal(
     species,
-    morph = "Normal",
-    gender = randomGender(),
-    ageMonths = 0
+    morph,
+    gender,
+    age,
+    quality
 ) {
 
     return {
 
         id:
             Date.now() +
-            Math.floor(
-                Math.random() * 1000000
-            ),
+            Math.random(),
 
-        name:
-            `${morph} ${species}`,
+        species,
+        morph,
+        gender,
 
-        species:
-            species,
-
-        morph:
-            morph,
-
-        gender:
-            gender,
-
-        ageMonths:
-            ageMonths,
+        ageMonths: age,
 
         ageDays:
-            ageMonths * DAYS_PER_MONTH,
+            age * DAYS_PER_MONTH,
 
-        health:
-            100,
+        quality,
 
-        foodLevel:
-            100,
+        health: quality,
 
-        waterLevel:
-            100,
+        breedingCooldown: 0,
 
         isAdult:
-            ageMonths >=
-            getAdultAge(species),
-
-        breedingCooldown:
-            0,
-
-        purchasePrice:
-            SPECIES[species]?.price || 100,
-
-        birthMonth:
-            game.month
+            age >= adultAge(species)
 
     };
-
-}
-
-
-function getAdultAge(species) {
-
-    return (
-        SPECIES[species]?.adultAge
-        || 12
-    );
-
 }
 
 
 /* =========================================================
-   SHOP
+   PRICE
 ========================================================= */
 
-function renderAnimalShop() {
+function calculatePrice(
+    species,
+    morph,
+    age,
+    quality
+) {
+
+    const data =
+        SPECIES[species];
+
+    let price =
+        data.basePrice;
+
+    /*
+       Morph
+    */
+
+    price *=
+        data.morphs[morph] || 1;
+
+
+    /*
+       Leeftijd
+
+       Baby = goedkoper
+       Volwassen = duurder
+    */
+
+    if (age < 3) {
+
+        price *= 0.65;
+
+    } else if (
+        age < adultAge(species)
+    ) {
+
+        price *= 0.85;
+
+    } else {
+
+        price *= 1.15;
+
+    }
+
+
+    /*
+       Kwaliteit
+
+       50% = goedkoop
+       100% = duurder
+    */
+
+    price *=
+        0.5 +
+        quality / 100;
+
+
+    return Math.max(
+        10,
+        Math.round(price)
+    );
+}
+
+
+/* =========================================================
+   SHOP UI
+========================================================= */
+
+function renderShop() {
 
     const shop =
         document.getElementById(
             "shopList"
         );
 
-    if (!shop) {
-        return;
-    }
+    if (!shop) return;
 
     shop.innerHTML = "";
 
 
-    Object.entries(SPECIES)
-        .forEach(
-            function([species, data], index) {
+    Object.keys(SPECIES).forEach(
+        species => {
 
-                const card =
-                    document.createElement(
-                        "div"
-                    );
+            const data =
+                SPECIES[species];
 
-                card.className =
-                    "shop-animal-card";
+            const card =
+                document.createElement(
+                    "div"
+                );
 
-
-                const morphNames =
-                    Object.keys(
-                        data.morphs
-                    );
+            card.className =
+                "shop-card";
 
 
-                card.innerHTML = `
+            const morphs =
+                Object.keys(
+                    data.morphs
+                );
 
-                    <h3>
-                        🦎 ${species}
-                    </h3>
 
-                    <p>
-                        Beschikbare morphs:
-                    </p>
+            card.innerHTML = `
 
-                    <p>
-                        🧬
-                        ${morphNames.join(", ")}
-                    </p>
+                <h3>🦎 ${species}</h3>
 
-                    <div class="shop-price">
-                        💰 €${data.price}
-                    </div>
-
-                    <button
-                        class="buy-animal-button"
-                        type="button"
-                        onclick="buyAnimal('${escapeQuotes(species)}')"
+                <label>
+                    🧬 Morph:
+                    <select
+                        id="morph-${safeId(species)}"
                     >
-                        🛒 Koop dier
-                    </button>
+                        ${morphs.map(
+                            morph =>
+                            `<option value="${escapeHTML(morph)}">
+                                ${morph}
+                            </option>`
+                        ).join("")}
+                    </select>
+                </label>
 
-                `;
+                <br>
 
+                <label>
+                    ⚧️ Geslacht:
+                    <select
+                        id="gender-${safeId(species)}"
+                    >
+                        <option value="Male">
+                            ♂️ Male
+                        </option>
+                        <option value="Female">
+                            ♀️ Female
+                        </option>
+                    </select>
+                </label>
 
-                shop.appendChild(card);
+                <br>
 
-            }
-        );
+                <label>
+                    📅 Leeftijd:
+                    <select
+                        id="age-${safeId(species)}"
+                    >
+                        ${ageOptions(species)}
+                    </select>
+                </label>
 
+                <br>
 
-    updateShopMoney();
+                <label>
+                    ⭐ Kwaliteit:
+                    <input
+                        id="quality-${safeId(species)}"
+                        type="range"
+                        min="50"
+                        max="100"
+                        value="80"
+                        oninput="
+                            updateShopPrice('${escapeJS(species)}')
+                        "
+                    >
+
+                    <b id="quality-value-${safeId(species)}">
+                        80%
+                    </b>
+                </label>
+
+                <div
+                    id="price-${safeId(species)}"
+                    class="shop-price"
+                >
+                    💰 Prijs berekenen...
+                </div>
+
+                <button
+                    type="button"
+                    onclick="
+                        buyFromShop('${escapeJS(species)}')
+                    "
+                >
+                    🛒 Kopen
+                </button>
+
+            `;
+
+            shop.appendChild(card);
+
+            updateShopPrice(species);
+
+        }
+    );
 
 }
 
 
-function escapeQuotes(text) {
+function ageOptions(species) {
 
-    return text
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
+    const max =
+        adultAge(species) + 12;
+
+    let html = "";
+
+    for (
+        let age = 0;
+        age <= max;
+        age++
+    ) {
+
+        html += `
+            <option value="${age}">
+                ${age} maand${age === 1 ? "" : "en"}
+            </option>
+        `;
+
+    }
+
+    return html;
+}
+
+
+/* =========================================================
+   SHOP PRICE LIVE UPDATE
+========================================================= */
+
+function updateShopPrice(species) {
+
+    const id =
+        safeId(species);
+
+    const morph =
+        document.getElementById(
+            `morph-${id}`
+        )?.value || "Normal";
+
+    const age =
+        Number(
+            document.getElementById(
+                `age-${id}`
+            )?.value || 0
+        );
+
+    const quality =
+        Number(
+            document.getElementById(
+                `quality-${id}`
+            )?.value || 80
+        );
+
+
+    const price =
+        calculatePrice(
+            species,
+            morph,
+            age,
+            quality
+        );
+
+
+    const priceElement =
+        document.getElementById(
+            `price-${id}`
+        );
+
+    if (priceElement) {
+
+        priceElement.innerHTML =
+            `💰 <strong>€${price}</strong>`;
+
+    }
+
+
+    const qualityElement =
+        document.getElementById(
+            `quality-value-${id}`
+        );
+
+    if (qualityElement) {
+
+        qualityElement.textContent =
+            `${quality}%`;
+
+    }
 
 }
 
 
 /* =========================================================
-   BUY ANIMAL
+   BUY FROM SHOP
 ========================================================= */
 
-function buyAnimal(species) {
+function buyFromShop(species) {
 
-    const data =
-        SPECIES[species];
+    const id =
+        safeId(species);
 
+    const morph =
+        document.getElementById(
+            `morph-${id}`
+        ).value;
 
-    if (!data) {
+    const gender =
+        document.getElementById(
+            `gender-${id}`
+        ).value;
 
-        alert(
-            "Dit dier bestaat niet."
+    const age =
+        Number(
+            document.getElementById(
+                `age-${id}`
+            ).value
         );
 
-        return;
+    const quality =
+        Number(
+            document.getElementById(
+                `quality-${id}`
+            ).value
+        );
 
-    }
+
+    const price =
+        calculatePrice(
+            species,
+            morph,
+            age,
+            quality
+        );
 
 
     if (
-        game.money <
-        data.price
+        game.money < price
     ) {
 
         alert(
             `❌ Niet genoeg geld!\n\n` +
-            `Je hebt €${game.money}.\n` +
-            `Dit dier kost €${data.price}.`
+            `Prijs: €${price}\n` +
+            `Je geld: €${game.money}`
         );
 
         return;
 
     }
-
-
-    const gender =
-        randomGender();
-
-
-    const morph =
-        randomItem(
-            Object.keys(
-                data.morphs
-            )
-        );
 
 
     const animal =
@@ -622,13 +685,12 @@ function buyAnimal(species) {
             species,
             morph,
             gender,
-            0
+            age,
+            quality
         );
 
 
-    game.money -=
-        data.price;
-
+    game.money -= price;
 
     game.animals.push(
         animal
@@ -637,11 +699,7 @@ function buyAnimal(species) {
 
     saveGame();
 
-    updateUI();
-
-    renderAnimalShop();
-
-    renderFinalAnimals();
+    updateEverything();
 
 
     alert(
@@ -652,13 +710,13 @@ function buyAnimal(species) {
 
         `🧬 ${morph}\n` +
 
-        `${
-            gender === "Male"
-                ? "♂️ Mannetje"
-                : "♀️ Vrouwtje"
-        }\n\n` +
+        `${genderText(gender)}\n` +
 
-        `💰 -€${data.price}`
+        `📅 ${age} maanden oud\n` +
+
+        `⭐ Kwaliteit: ${quality}%\n\n` +
+
+        `💰 Betaald: €${price}`
 
     );
 
@@ -666,41 +724,17 @@ function buyAnimal(species) {
 
 
 /* =========================================================
-   SHOP MONEY
+   ANIMALS
 ========================================================= */
 
-function updateShopMoney() {
-
-    const element =
-        document.getElementById(
-            "shopMoney"
-        );
-
-    if (element) {
-
-        element.textContent =
-            game.money;
-
-    }
-
-}
-
-
-/* =========================================================
-   ANIMALS PAGE
-========================================================= */
-
-function renderFinalAnimals() {
+function renderAnimals() {
 
     const list =
         document.getElementById(
             "animalList"
         );
 
-    if (!list) {
-        return;
-    }
-
+    if (!list) return;
 
     list.innerHTML = "";
 
@@ -710,17 +744,11 @@ function renderFinalAnimals() {
     ) {
 
         list.innerHTML = `
-
             <div class="empty-state">
-
                 🦎 Je hebt nog geen dieren.
-
                 <br><br>
-
                 Ga naar de Shop!
-
             </div>
-
         `;
 
         return;
@@ -729,7 +757,7 @@ function renderFinalAnimals() {
 
 
     game.animals.forEach(
-        function(animal) {
+        animal => {
 
             const card =
                 document.createElement(
@@ -740,47 +768,28 @@ function renderFinalAnimals() {
                 "animal-card";
 
 
-            const gender =
-                animal.gender === "Male"
-                    ? "♂️ Mannetje"
-                    : "♀️ Vrouwtje";
-
-
-            const adult =
-                animal.isAdult
-                    ? "Adult"
-                    : "Baby";
-
-
             card.innerHTML = `
 
                 <h3>
-                    🦎 ${animal.name}
+                    🦎 ${animal.species}
                 </h3>
 
                 <p>
-                    Species:
-                    ${animal.species}
+                    🧬 ${animal.morph}
                 </p>
 
                 <p>
-                    🧬 Morph:
-                    ${animal.morph}
+                    ${genderText(animal.gender)}
                 </p>
 
                 <p>
-                    ${gender}
+                    📅 ${animal.ageMonths}
+                    maanden
                 </p>
 
                 <p>
-                    📅 Leeftijd:
-                    ${animal.ageMonths}
-                    maand(en)
-                </p>
-
-                <p>
-                    ${animal.isAdult ? "🟢" : "🐣"}
-                    ${adult}
+                    ⭐ Kwaliteit:
+                    ${animal.quality}%
                 </p>
 
                 <p>
@@ -788,15 +797,24 @@ function renderFinalAnimals() {
                     ${animal.health}%
                 </p>
 
+                <p>
+                    ${
+                        animal.isAdult
+                        ? "🟢 Volwassen"
+                        : "🐣 Jong"
+                    }
+                </p>
+
                 <button
                     type="button"
-                    onclick="openAnimalModal(${animal.id})"
+                    onclick="
+                        openAnimalModal(${animal.id})
+                    "
                 >
                     🔍 Details
                 </button>
 
             `;
-
 
             list.appendChild(card);
 
@@ -807,27 +825,19 @@ function renderFinalAnimals() {
 
 
 /* =========================================================
-   ANIMAL MODAL
+   MODAL
 ========================================================= */
 
 function openAnimalModal(id) {
 
     const animal =
         game.animals.find(
-            function(a) {
-
-                return (
-                    Number(a.id) ===
-                    Number(id)
-                );
-
-            }
+            a =>
+            Number(a.id) ===
+            Number(id)
         );
 
-
-    if (!animal) {
-        return;
-    }
+    if (!animal) return;
 
 
     const modal =
@@ -835,69 +845,51 @@ function openAnimalModal(id) {
             "animalModal"
         );
 
-
     const details =
         document.getElementById(
             "animalDetails"
         );
 
 
-    if (!modal || !details) {
+    if (!modal || !details)
         return;
-    }
 
 
     details.innerHTML = `
 
         <h2>
-            🦎 ${animal.name}
+            🦎 ${animal.species}
         </h2>
 
         <p>
-            <strong>Soort:</strong>
-            ${animal.species}
-        </p>
-
-        <p>
-            <strong>Morph:</strong>
+            🧬 Morph:
             ${animal.morph}
         </p>
 
         <p>
-            <strong>Geslacht:</strong>
-            ${
-                animal.gender === "Male"
-                    ? "♂️ Mannetje"
-                    : "♀️ Vrouwtje"
-            }
+            ${genderText(animal.gender)}
         </p>
 
         <p>
-            <strong>Leeftijd:</strong>
+            📅 Leeftijd:
             ${animal.ageMonths} maanden
         </p>
 
         <p>
-            <strong>Gezondheid:</strong>
+            ⭐ Kwaliteit:
+            ${animal.quality}%
+        </p>
+
+        <p>
+            ❤️ Gezondheid:
             ${animal.health}%
         </p>
 
         <p>
-            <strong>Voeding:</strong>
-            ${animal.foodLevel}%
-        </p>
-
-        <p>
-            <strong>Water:</strong>
-            ${animal.waterLevel}%
-        </p>
-
-        <p>
-            <strong>Status:</strong>
             ${
                 animal.isAdult
-                    ? "🟢 Adult"
-                    : "🐣 Baby"
+                ? "🟢 Volwassen"
+                : "🐣 Jong"
             }
         </p>
 
@@ -913,72 +905,51 @@ function openAnimalModal(id) {
 
 function closeAnimalModal() {
 
-    const modal =
-        document.getElementById(
+    document
+        .getElementById(
             "animalModal"
-        );
-
-
-    if (modal) {
-
-        modal.classList.add(
+        )
+        ?.classList.add(
             "hidden"
         );
-
-    }
 
 }
 
 
 /* =========================================================
-   BREEDING PAGE
+   BREEDING
 ========================================================= */
 
-function renderBreedingPage() {
+function renderBreeding() {
 
     const list =
         document.getElementById(
             "breedingAnimals"
         );
 
-    if (!list) {
-        return;
-    }
-
+    if (!list) return;
 
     list.innerHTML = "";
 
 
     const adults =
         game.animals.filter(
-            function(animal) {
-
-                return (
-                    animal.isAdult &&
-                    animal.health > 0 &&
-                    animal.breedingCooldown <= 0
-                );
-
-            }
+            animal =>
+                animal.isAdult &&
+                animal.health > 0 &&
+                animal.breedingCooldown <= 0
         );
 
 
-    if (adults.length === 0) {
+    if (
+        adults.length === 0
+    ) {
 
         list.innerHTML = `
-
             <div class="empty-state">
-
-                🧬 Je hebt nog geen volwassen
-                dieren die kunnen fokken.
-
-                <br><br>
-
-                Koop dieren in de Shop
-                en laat ze ouder worden.
-
+                🧬 Geen volwassen dieren
+                beschikbaar voor breeding.
             </div>
-
         `;
 
         return;
@@ -987,45 +958,47 @@ function renderBreedingPage() {
 
 
     adults.forEach(
-        function(animal) {
+        animal => {
 
             const card =
                 document.createElement(
                     "div"
                 );
 
-
             card.className =
-                "breeding-animal-card";
+                "animal-card";
 
 
             card.innerHTML = `
 
                 <h3>
-                    ${animal.gender === "Male"
+                    ${
+                        animal.gender === "Male"
                         ? "♂️"
                         : "♀️"
                     }
-                    ${animal.name}
-                </h3>
-
-                <p>
                     ${animal.species}
-                </p>
+                </h3>
 
                 <p>
                     🧬 ${animal.morph}
                 </p>
 
+                <p>
+                    📅 ${animal.ageMonths}
+                    maanden
+                </p>
+
                 <button
                     type="button"
-                    onclick="selectBreedingAnimal(${animal.id})"
+                    onclick="
+                        selectParent(${animal.id})
+                    "
                 >
                     Selecteren
                 </button>
 
             `;
-
 
             list.appendChild(card);
 
@@ -1033,55 +1006,27 @@ function renderBreedingPage() {
     );
 
 
-    updateParentBoxes();
-
-    updateBreedButton();
+    updateParents();
 
 }
 
 
-/* =========================================================
-   SELECT BREEDING ANIMAL
-========================================================= */
-
-function selectBreedingAnimal(id) {
+function selectParent(id) {
 
     const animal =
         game.animals.find(
-            function(a) {
-
-                return (
-                    Number(a.id) ===
-                    Number(id)
-                );
-
-            }
+            a =>
+            Number(a.id) ===
+            Number(id)
         );
 
-
-    if (!animal) {
-        return;
-    }
+    if (!animal) return;
 
 
     if (!animal.isAdult) {
 
         alert(
-            "Dit dier is nog niet volwassen."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        animal.breedingCooldown > 0
-    ) {
-
-        alert(
-            `Dit dier moet nog ` +
-            `${animal.breedingCooldown} maand(en) wachten.`
+            "❌ Dit dier is nog niet volwassen."
         );
 
         return;
@@ -1096,9 +1041,7 @@ function selectBreedingAnimal(id) {
         selectedMale =
             animal;
 
-    }
-
-    else {
+    } else {
 
         selectedFemale =
             animal;
@@ -1106,20 +1049,17 @@ function selectBreedingAnimal(id) {
     }
 
 
-    updateParentBoxes();
-
-    updateBreedButton();
+    updateParents();
 
 }
 
 
-function updateParentBoxes() {
+function updateParents() {
 
     const male =
         document.getElementById(
             "maleSelection"
         );
-
 
     const female =
         document.getElementById(
@@ -1129,75 +1069,53 @@ function updateParentBoxes() {
 
     if (male) {
 
-        if (selectedMale) {
+        male.innerHTML =
+            selectedMale
 
-            male.innerHTML = `
-
+            ? `
                 <h3>
-                    🐍 ${selectedMale.name}
+                    ♂️ ${selectedMale.species}
                 </h3>
-
-                <p>
-                    ${selectedMale.species}
-                </p>
 
                 <p>
                     🧬 ${selectedMale.morph}
                 </p>
 
-            `;
+                <p>
+                    ${selectedMale.ageMonths}
+                    maanden
+                </p>
+            `
 
-        }
-
-        else {
-
-            male.innerHTML =
-                "<p>Kies een mannetje.</p>";
-
-        }
+            : "<p>Kies een mannetje.</p>";
 
     }
 
 
     if (female) {
 
-        if (selectedFemale) {
+        female.innerHTML =
+            selectedFemale
 
-            female.innerHTML = `
-
+            ? `
                 <h3>
-                    🐍 ${selectedFemale.name}
+                    ♀️ ${selectedFemale.species}
                 </h3>
-
-                <p>
-                    ${selectedFemale.species}
-                </p>
 
                 <p>
                     🧬 ${selectedFemale.morph}
                 </p>
 
-            `;
+                <p>
+                    ${selectedFemale.ageMonths}
+                    maanden
+                </p>
+            `
 
-        }
-
-        else {
-
-            female.innerHTML =
-                "<p>Kies een vrouwtje.</p>";
-
-        }
+            : "<p>Kies een vrouwtje.</p>";
 
     }
 
-}
-
-
-/* =========================================================
-   BREED BUTTON
-========================================================= */
-
-function updateBreedButton() {
 
     const button =
         document.getElementById(
@@ -1205,205 +1123,21 @@ function updateBreedButton() {
         );
 
 
-    if (!button) {
-        return;
+    if (button) {
+
+        button.disabled =
+            !(
+                selectedMale &&
+                selectedFemale
+            );
+
     }
-
-
-    button.disabled = !(
-        selectedMale &&
-        selectedFemale
-    );
-
-
-    button.textContent =
-        selectedMale &&
-        selectedFemale
-
-            ? "🧬 Start Breeding"
-
-            : "🧬 Kies beide ouders";
 
 }
 
 
 /* =========================================================
-   GENETICS
-========================================================= */
-
-function getGeneticResult(
-    father,
-    mother
-) {
-
-    const sameSpecies =
-        father.species ===
-        mother.species;
-
-
-    if (!sameSpecies) {
-
-        return {
-
-            success: false,
-
-            reason:
-                "De twee dieren zijn verschillende soorten."
-
-        };
-
-    }
-
-
-    const species =
-        father.species;
-
-
-    const available =
-        Object.keys(
-            SPECIES[species].morphs
-        );
-
-
-    const fatherMorph =
-        father.morph || "Normal";
-
-
-    const motherMorph =
-        mother.morph || "Normal";
-
-
-    let possible =
-        [];
-
-
-    /*
-       Exacte combinatie
-    */
-
-    if (
-        fatherMorph !== "Normal" &&
-        fatherMorph === motherMorph
-    ) {
-
-        possible.push(
-            fatherMorph
-        );
-
-    }
-
-
-    /*
-       Vader morph
-    */
-
-    if (
-        fatherMorph !== "Normal"
-    ) {
-
-        if (
-            Math.random() < 0.50
-        ) {
-
-            possible.push(
-                fatherMorph
-            );
-
-        }
-
-    }
-
-
-    /*
-       Moeder morph
-    */
-
-    if (
-        motherMorph !== "Normal"
-    ) {
-
-        if (
-            Math.random() < 0.50
-        ) {
-
-            possible.push(
-                motherMorph
-            );
-
-        }
-
-    }
-
-
-    /*
-       Combinaties
-    */
-
-    if (
-        fatherMorph !== "Normal" &&
-        motherMorph !== "Normal" &&
-        fatherMorph !== motherMorph
-    ) {
-
-        const combined =
-            `${fatherMorph} ${motherMorph}`;
-
-
-        if (
-            available.includes(combined)
-        ) {
-
-            if (
-                Math.random() < 0.35
-            ) {
-
-                possible.push(
-                    combined
-                );
-
-            }
-
-        }
-
-    }
-
-
-    /*
-       Normal fallback
-    */
-
-    if (
-        possible.length === 0
-    ) {
-
-        possible.push(
-            "Normal"
-        );
-
-    }
-
-
-    const morph =
-        randomItem(
-            possible
-        );
-
-
-    return {
-
-        success: true,
-
-        species: species,
-
-        morph: morph
-
-    };
-
-}
-
-
-/* =========================================================
-   BREEDING
+   BREED
 ========================================================= */
 
 function startBreeding() {
@@ -1414,7 +1148,7 @@ function startBreeding() {
     ) {
 
         alert(
-            "Kies eerst een mannetje en vrouwtje."
+            "❌ Kies een mannetje en vrouwtje."
         );
 
         return;
@@ -1428,7 +1162,7 @@ function startBreeding() {
     ) {
 
         alert(
-            "❌ Deze twee dieren zijn verschillende soorten."
+            "❌ Verschillende soorten kunnen niet samen fokken."
         );
 
         return;
@@ -1436,77 +1170,29 @@ function startBreeding() {
     }
 
 
-    if (
-        !selectedMale.isAdult ||
-        !selectedFemale.isAdult
-    ) {
-
-        alert(
-            "❌ Beide dieren moeten volwassen zijn."
-        );
-
-        return;
-
-    }
+    const species =
+        selectedMale.species;
 
 
-    if (
-        selectedMale.breedingCooldown > 0 ||
-        selectedFemale.breedingCooldown > 0
-    ) {
-
-        alert(
-            "❌ Eén van de dieren moet nog wachten."
-        );
-
-        return;
-
-    }
-
-
-    const result =
-        getGeneticResult(
+    const morph =
+        breedingMorph(
             selectedMale,
             selectedFemale
         );
 
 
-    if (!result.success) {
-
-        alert(
-            "Breeding mislukt."
-        );
-
-        return;
-
-    }
-
-
-    /*
-       1 tot 4 eieren
-    */
-
     const eggCount =
-        randomNumber(
-            1,
-            4
-        );
-
-
-    const speciesData =
-        SPECIES[
-            result.species
-        ];
+        random(1, 4);
 
 
     const incubation =
-        randomNumber(
-            speciesData.incubation[0],
-            speciesData.incubation[1]
+        random(
+            SPECIES[species].incubation[0],
+            SPECIES[species].incubation[1]
         );
 
 
-    let fertileEggs =
+    let fertile =
         0;
 
 
@@ -1516,37 +1202,26 @@ function startBreeding() {
         i++
     ) {
 
-        /*
-           Kleine kans dat een ei infertile is.
-        */
-
-        const fertile =
-            Math.random() < 0.90;
+        const isFertile =
+            Math.random() < 0.9;
 
 
-        const egg = {
+        if (isFertile)
+            fertile++;
+
+
+        game.eggs.push({
 
             id:
                 Date.now() +
-                Math.floor(
-                    Math.random() *
-                    1000000
-                ) +
-                i,
+                Math.random(),
 
-            species:
-                result.species,
+            species,
 
-            morph:
-                result.morph,
-
-            parents: [
-                selectedMale.id,
-                selectedFemale.id
-            ],
+            morph,
 
             fertile:
-                fertile,
+                isFertile,
 
             incubationMonths:
                 incubation,
@@ -1554,37 +1229,20 @@ function startBreeding() {
             monthsRemaining:
                 incubation,
 
+            ready:
+                false,
+
             laidMonth:
-                game.month,
+                game.month
 
-            status:
-                fertile
-                    ? "Incubating"
-                    : "Infertile"
-
-        };
-
-
-        game.eggs.push(
-            egg
-        );
-
-
-        game.statistics.eggsLaid++;
-
-
-        if (fertile) {
-
-            fertileEggs++;
-
-        }
+        });
 
     }
 
 
-    /*
-       Cooldown
-    */
+    game.statistics.eggsLaid +=
+        eggCount;
+
 
     selectedMale.breedingCooldown =
         2;
@@ -1593,75 +1251,115 @@ function startBreeding() {
         2;
 
 
-    saveGame();
-
-    updateUI();
-
-    renderMonthlyEggs();
-
-
-    const message =
-        document.getElementById(
-            "breedingMessage"
-        );
-
-
-    if (message) {
-
-        message.innerHTML = `
-
-            🥚 <strong>${eggCount}
-            ei(eren) gelegd!</strong>
-
-            <br><br>
-
-            🧬 Mogelijke morph:
-            <strong>${result.morph}</strong>
-
-            <br>
-
-            🥚 Fertile:
-            <strong>${fertileEggs}</strong>
-
-            <br>
-
-            ❌ Infertile:
-            <strong>${eggCount - fertileEggs}</strong>
-
-            <br>
-
-            ⏳ Incubatie:
-            <strong>${incubation} maand(en)</strong>
-
-        `;
-
-    }
-
-
     selectedMale = null;
-
     selectedFemale = null;
 
-    updateParentBoxes();
 
-    updateBreedButton();
+    saveGame();
+
+    updateEverything();
 
 
     alert(
 
-        `🧬 Breeding succesvol!\n\n` +
+        `🥚 Breeding succesvol!\n\n` +
 
-        `🥚 ${eggCount} ei(eren)\n` +
+        `🥚 Eieren: ${eggCount}\n` +
 
-        `🟢 ${fertileEggs} fertile\n` +
+        `🟢 Fertile: ${fertile}\n` +
 
-        `🔴 ${eggCount - fertileEggs} infertile\n\n` +
+        `🔴 Infertile: ${
+            eggCount - fertile
+        }\n\n` +
 
-        `🧬 Morph: ${result.morph}\n` +
+        `🧬 Morph: ${morph}\n` +
 
-        `⏳ Incubatie: ${incubation} maand(en)`
+        `⏳ Incubatie: ${incubation} maand(en)\n\n` +
+
+        `Je moet de eieren zelf hatchen zodra ze klaar zijn.`
 
     );
+
+}
+
+
+/* =========================================================
+   SIMPLE GENETICS
+========================================================= */
+
+function breedingMorph(
+    father,
+    mother
+) {
+
+    const species =
+        SPECIES[
+            father.species
+        ];
+
+    const fatherMorph =
+        father.morph;
+
+    const motherMorph =
+        mother.morph;
+
+
+    if (
+        fatherMorph ===
+        motherMorph
+    ) {
+
+        if (
+            Math.random() < 0.75
+        ) {
+
+            return fatherMorph;
+
+        }
+
+    }
+
+
+    if (
+        fatherMorph !== "Normal" &&
+        Math.random() < 0.5
+    ) {
+
+        return fatherMorph;
+
+    }
+
+
+    if (
+        motherMorph !== "Normal" &&
+        Math.random() < 0.5
+    ) {
+
+        return motherMorph;
+
+    }
+
+
+    /*
+       Soms een combinatie
+       als die bestaat.
+    */
+
+    const combo =
+        `${fatherMorph} ${motherMorph}`;
+
+
+    if (
+        species.morphs[combo] &&
+        Math.random() < 0.25
+    ) {
+
+        return combo;
+
+    }
+
+
+    return "Normal";
 
 }
 
@@ -1670,18 +1368,14 @@ function startBreeding() {
    INCUBATOR
 ========================================================= */
 
-function renderMonthlyEggs() {
+function renderIncubator() {
 
     const list =
         document.getElementById(
             "eggList"
         );
 
-
-    if (!list) {
-        return;
-    }
-
+    if (!list) return;
 
     list.innerHTML = "";
 
@@ -1691,18 +1385,9 @@ function renderMonthlyEggs() {
     ) {
 
         list.innerHTML = `
-
             <div class="empty-state">
-
-                🥚 Geen eieren.
-
-                <br><br>
-
-                Ga naar Breeding
-                om eieren te krijgen.
-
+                🥚 Geen eieren in de incubator.
             </div>
-
         `;
 
         return;
@@ -1711,59 +1396,107 @@ function renderMonthlyEggs() {
 
 
     game.eggs.forEach(
-        function(egg) {
+        egg => {
 
             const card =
                 document.createElement(
                     "div"
                 );
 
-
             card.className =
                 "egg-card";
 
 
-            const status =
-                egg.fertile
-                    ? "🟢 Fertile"
-                    : "🔴 Infertile";
+            if (
+                !egg.fertile
+            ) {
+
+                card.innerHTML = `
+
+                    <h3>
+                        🥚 ${egg.species}
+                    </h3>
+
+                    <p>
+                        🧬 ${egg.morph}
+                    </p>
+
+                    <p>
+                        🔴 Infertile
+                    </p>
+
+                    <p>
+                        Dit ei zal niet uitkomen.
+                    </p>
+
+                `;
+
+                list.appendChild(card);
+
+                return;
+
+            }
 
 
-            const remaining =
-                Math.max(
-                    0,
-                    egg.monthsRemaining
-                );
+            if (
+                egg.monthsRemaining <= 0
+            ) {
+
+                egg.ready = true;
 
 
-            card.innerHTML = `
+                card.innerHTML = `
 
-                <h3>
-                    🥚 ${egg.species}
-                </h3>
+                    <h3>
+                        🥚 ${egg.species}
+                    </h3>
 
-                <p>
-                    🧬 Morph:
-                    ${egg.morph}
-                </p>
+                    <p>
+                        🧬 ${egg.morph}
+                    </p>
 
-                <p>
-                    ${status}
-                </p>
+                    <p>
+                        🟢 Klaar om uit te komen!
+                    </p>
 
-                <p>
-                    ⏳ Nog:
-                    ${remaining}
-                    maand(en)
-                </p>
+                    <button
+                        type="button"
+                        onclick="
+                            hatchEgg(${egg.id})
+                        "
+                    >
+                        🐣 HATCH EGG
+                    </button>
 
-                <p>
-                    Totale incubatie:
-                    ${egg.incubationMonths}
-                    maand(en)
-                </p>
+                `;
 
-            `;
+            } else {
+
+                card.innerHTML = `
+
+                    <h3>
+                        🥚 ${egg.species}
+                    </h3>
+
+                    <p>
+                        🧬 ${egg.morph}
+                    </p>
+
+                    <p>
+                        🟢 Fertile
+                    </p>
+
+                    <p>
+                        ⏳ Nog
+                        <strong>
+                            ${egg.monthsRemaining}
+                        </strong>
+                        maand(en)
+                    </p>
+
+                `;
+
+            }
 
 
             list.appendChild(card);
@@ -1775,226 +1508,74 @@ function renderMonthlyEggs() {
 
 
 /* =========================================================
-   NEXT MONTH
+   HATCH EGG MANUALLY
 ========================================================= */
 
-function nextMonth() {
-
-    /*
-       Maand vooruit
-    */
-
-    game.month++;
-
-
-    /*
-       Dag wordt eerste dag
-       van nieuwe maand.
-    */
-
-    game.day = 1;
-
-
-    /*
-       Dieren ouder maken
-    */
-
-    game.animals.forEach(
-        function(animal) {
-
-            animal.ageMonths++;
-
-            animal.ageDays =
-                animal.ageMonths *
-                DAYS_PER_MONTH;
-
-
-            animal.isAdult =
-                animal.ageMonths >=
-                getAdultAge(
-                    animal.species
-                );
-
-
-            /*
-               Cooldown
-            */
-
-            if (
-                animal.breedingCooldown > 0
-            ) {
-
-                animal.breedingCooldown--;
-
-            }
-
-
-            /*
-               Kleine verzorgingsverandering
-            */
-
-            animal.foodLevel =
-                Math.max(
-                    0,
-                    animal.foodLevel - 5
-                );
-
-            animal.waterLevel =
-                Math.max(
-                    0,
-                    animal.waterLevel - 5
-                );
-
-
-            /*
-               Gezondheid
-            */
-
-            if (
-                animal.foodLevel < 30 ||
-                animal.waterLevel < 30
-            ) {
-
-                animal.health =
-                    Math.max(
-                        0,
-                        animal.health - 5
-                    );
-
-            }
-
-        }
-    );
-
-
-    /*
-       Eieren verwerken
-    */
-
-    processEggs();
-
-
-    saveGame();
-
-    updateUI();
-
-    renderFinalAnimals();
-
-    renderMonthlyEggs();
-
-    renderAnimalShop();
-
-    renderBreedingPage();
-
-
-    alert(
-
-        `📅 Maand ${game.month}\n\n` +
-
-        `Alle dieren zijn 1 maand ouder geworden.`
-
-    );
-
-}
-
-
-/* =========================================================
-   EGG PROCESSING
-========================================================= */
-
-function processEggs() {
-
-    const babies = [];
-
-
-    game.eggs.forEach(
-        function(egg) {
-
-            if (
-                !egg.fertile
-            ) {
-
-                return;
-
-            }
-
-
-            egg.monthsRemaining--;
-
-
-            if (
-                egg.monthsRemaining <= 0
-            ) {
-
-                babies.push(
-                    egg
-                );
-
-            }
-
-        }
-    );
-
-
-    /*
-       Verwijder eieren die klaar zijn
-    */
-
-    game.eggs =
-        game.eggs.filter(
-            function(egg) {
-
-                return (
-                    !babies.includes(egg)
-                );
-
-            }
+function hatchEgg(id) {
+
+    const index =
+        game.eggs.findIndex(
+            egg =>
+            Number(egg.id) ===
+            Number(id)
         );
 
 
+    if (index === -1) return;
+
+
+    const egg =
+        game.eggs[index];
+
+
+    if (!egg.fertile) {
+
+        alert(
+            "❌ Dit ei is infertile."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        egg.monthsRemaining > 0
+    ) {
+
+        alert(
+            `⏳ Dit ei moet nog ` +
+            `${egg.monthsRemaining} maand(en) incuberen.`
+        );
+
+        return;
+
+    }
+
+
     /*
-       Hatch
+       Kleine kans op hatch failure
     */
 
-    babies.forEach(
-        function(egg) {
-
-            hatchEgg(
-                egg
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   HATCH EGG
-========================================================= */
-
-function hatchEgg(egg) {
-
-    const gender =
-        randomGender();
-
-
-    /*
-       Kleine kans op slechte hatch
-    */
-
-    const hatchSuccess =
+    const survived =
         Math.random() < 0.92;
 
 
-    if (!hatchSuccess) {
+    game.eggs.splice(
+        index,
+        1
+    );
+
+
+    if (!survived) {
+
+        saveGame();
+
+        updateEverything();
+
 
         alert(
-
-            `🥚 Een ${egg.species} ei ` +
-            `heeft helaas niet succesvol ` +
-            `kunnen uitkomen.`
-
+            "🥚 Het ei is klaar, maar het jong heeft het helaas niet gehaald."
         );
 
         return;
@@ -2006,13 +1587,12 @@ function hatchEgg(egg) {
         createAnimal(
             egg.species,
             egg.morph,
-            gender,
-            0
+            Math.random() < 0.5
+                ? "Male"
+                : "Female",
+            0,
+            random(70, 100)
         );
-
-
-    baby.parents =
-        egg.parents || [];
 
 
     game.animals.push(
@@ -2025,11 +1605,183 @@ function hatchEgg(egg) {
 
     saveGame();
 
+    updateEverything();
+
+
+    alert(
+
+        `🐣 HATCHED!\n\n` +
+
+        `${egg.species}\n` +
+
+        `🧬 ${egg.morph}\n` +
+
+        `${genderText(baby.gender)}\n` +
+
+        `📅 0 maanden oud\n` +
+
+        `⭐ Kwaliteit: ${baby.quality}%`
+
+    );
+
 }
 
 
 /* =========================================================
-   MARKET
+   NEXT MONTH
+========================================================= */
+
+function nextMonth() {
+
+    game.month++;
+
+    game.day = 1;
+
+
+    /*
+       Animals age
+    */
+
+    game.animals.forEach(
+        animal => {
+
+            animal.ageMonths++;
+
+            animal.ageDays =
+                animal.ageMonths *
+                DAYS_PER_MONTH;
+
+
+            animal.isAdult =
+                animal.ageMonths >=
+                adultAge(
+                    animal.species
+                );
+
+
+            if (
+                animal.breedingCooldown > 0
+            ) {
+
+                animal.breedingCooldown--;
+
+            }
+
+        }
+    );
+
+
+    /*
+       Eggs progress
+    */
+
+    game.eggs.forEach(
+        egg => {
+
+            if (
+                !egg.fertile
+            ) return;
+
+
+            if (
+                egg.monthsRemaining > 0
+            ) {
+
+                egg.monthsRemaining--;
+
+            }
+
+
+            if (
+                egg.monthsRemaining <= 0
+            ) {
+
+                egg.monthsRemaining = 0;
+
+                egg.ready = true;
+
+            }
+
+        }
+    );
+
+
+    saveGame();
+
+    updateEverything();
+
+
+    alert(
+        `📅 Maand ${game.month}\n\n` +
+        `Je dieren zijn 1 maand ouder.\n` +
+        `Kijk bij de Incubator of eieren klaar zijn.`
+    );
+
+}
+
+
+/* =========================================================
+   MARKET / SELL
+========================================================= */
+
+function sellAnimal(id) {
+
+    const index =
+        game.animals.findIndex(
+            animal =>
+            Number(animal.id) ===
+            Number(id)
+        );
+
+
+    if (index === -1)
+        return;
+
+
+    const animal =
+        game.animals[index];
+
+
+    const price =
+        Math.round(
+            calculatePrice(
+                animal.species,
+                animal.morph,
+                animal.ageMonths,
+                animal.quality
+            ) * 0.6
+        );
+
+
+    game.animals.splice(
+        index,
+        1
+    );
+
+
+    game.money += price;
+
+    game.statistics.animalsSold++;
+
+    game.statistics.moneyEarned +=
+        price;
+
+
+    saveGame();
+
+    updateEverything();
+
+
+    alert(
+        `💰 ${animal.species} verkocht!\n\n` +
+        `+€${price}`
+    );
+
+}
+
+
+/* =========================================================
+   OPTIONAL MARKET PAGE
 ========================================================= */
 
 function renderMarket() {
@@ -2039,36 +1791,24 @@ function renderMarket() {
             "marketList"
         );
 
-
-    if (!list) {
-        return;
-    }
-
+    if (!list) return;
 
     list.innerHTML = "";
 
 
-    if (
-        game.animals.length === 0
-    ) {
-
-        list.innerHTML = `
-
-            <div class="empty-state">
-
-                🦎 Je hebt geen dieren om te verkopen.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
     game.animals.forEach(
-        function(animal) {
+        animal => {
+
+            const value =
+                Math.round(
+                    calculatePrice(
+                        animal.species,
+                        animal.morph,
+                        animal.ageMonths,
+                        animal.quality
+                    ) * 0.6
+                );
+
 
             const card =
                 document.createElement(
@@ -2080,67 +1820,33 @@ function renderMarket() {
                 "animal-card";
 
 
-            const basePrice =
-                SPECIES[
-                    animal.species
-                ]?.price || 100;
-
-
-            let value =
-                Math.round(
-                    basePrice * 0.60
-                );
-
-
-            /*
-               Zeldzame morphs
-               zijn meer waard.
-            */
-
-            if (
-                animal.morph !== "Normal"
-            ) {
-
-                value *= 2;
-
-            }
-
-
-            if (
-                animal.isAdult
-            ) {
-
-                value *= 1.25;
-
-            }
-
-
-            value =
-                Math.round(value);
-
-
             card.innerHTML = `
 
                 <h3>
-                    🦎 ${animal.name}
+                    🦎 ${animal.species}
                 </h3>
-
-                <p>
-                    ${animal.species}
-                </p>
 
                 <p>
                     🧬 ${animal.morph}
                 </p>
 
                 <p>
-                    💰 Waarde:
-                    €${value}
+                    ${genderText(animal.gender)}
+                </p>
+
+                <p>
+                    ⭐ ${animal.quality}%
+                </p>
+
+                <p>
+                    💰 €${value}
                 </p>
 
                 <button
                     type="button"
-                    onclick="sellAnimal(${animal.id})"
+                    onclick="
+                        sellAnimal(${animal.id})
+                    "
                 >
                     💰 Verkopen
                 </button>
@@ -2157,308 +1863,10 @@ function renderMarket() {
 
 
 /* =========================================================
-   SELL ANIMAL
-========================================================= */
-
-function sellAnimal(id) {
-
-    const index =
-        game.animals.findIndex(
-            function(animal) {
-
-                return (
-                    Number(animal.id) ===
-                    Number(id)
-                );
-
-            }
-        );
-
-
-    if (index === -1) {
-        return;
-    }
-
-
-    const animal =
-        game.animals[index];
-
-
-    const basePrice =
-        SPECIES[
-            animal.species
-        ]?.price || 100;
-
-
-    let value =
-        Math.round(
-            basePrice * 0.60
-        );
-
-
-    if (
-        animal.morph !== "Normal"
-    ) {
-
-        value *= 2;
-
-    }
-
-
-    if (
-        animal.isAdult
-    ) {
-
-        value *= 1.25;
-
-    }
-
-
-    value =
-        Math.round(value);
-
-
-    game.money +=
-        value;
-
-
-    game.statistics.animalsSold++;
-
-    game.statistics.moneyEarned +=
-        value;
-
-
-    game.animals.splice(
-        index,
-        1
-    );
-
-
-    saveGame();
-
-    updateUI();
-
-    renderFinalAnimals();
-
-    renderMarket();
-
-
-    alert(
-
-        `💰 Dier verkocht!\n\n` +
-
-        `${animal.name}\n\n` +
-
-        `+€${value}`
-
-    );
-
-}
-
-
-/* =========================================================
-   STATISTICS
-========================================================= */
-
-function renderStatistics() {
-
-    const born =
-        document.getElementById(
-            "animalsBorn"
-        );
-
-
-    const eggs =
-        document.getElementById(
-            "eggsLaid"
-        );
-
-
-    const sold =
-        document.getElementById(
-            "animalsSold"
-        );
-
-
-    const earned =
-        document.getElementById(
-            "moneyEarned"
-        );
-
-
-    if (born) {
-
-        born.textContent =
-            game.statistics.animalsBorn;
-
-    }
-
-
-    if (eggs) {
-
-        eggs.textContent =
-            game.statistics.eggsLaid;
-
-    }
-
-
-    if (sold) {
-
-        sold.textContent =
-            game.statistics.animalsSold;
-
-    }
-
-
-    if (earned) {
-
-        earned.textContent =
-            game.statistics.moneyEarned;
-
-    }
-
-}
-
-
-/* =========================================================
-   UPDATE ALL UI
-========================================================= */
-
-function updateUI() {
-
-    const animalCount =
-        game.animals.length;
-
-
-    const eggCount =
-        game.eggs.length;
-
-
-    const elements = {
-
-        day:
-            document.getElementById(
-                "day"
-            ),
-
-        month:
-            document.getElementById(
-                "month"
-            ),
-
-        money:
-            document.getElementById(
-                "money"
-            ),
-
-        animalCount:
-            document.getElementById(
-                "animalCount"
-            ),
-
-        eggCount:
-            document.getElementById(
-                "eggCount"
-            ),
-
-        homeDay:
-            document.getElementById(
-                "homeDay"
-            ),
-
-        homeMonth:
-            document.getElementById(
-                "homeMonth"
-            ),
-
-        homeMoney:
-            document.getElementById(
-                "homeMoney"
-            ),
-
-        homeAnimalCount:
-            document.getElementById(
-                "homeAnimalCount"
-            ),
-
-        homeEggCount:
-            document.getElementById(
-                "homeEggCount"
-            ),
-
-        shopMoney:
-            document.getElementById(
-                "shopMoney"
-            )
-
-    };
-
-
-    if (elements.day)
-        elements.day.textContent =
-            game.day;
-
-
-    if (elements.month)
-        elements.month.textContent =
-            game.month;
-
-
-    if (elements.money)
-        elements.money.textContent =
-            game.money;
-
-
-    if (elements.animalCount)
-        elements.animalCount.textContent =
-            animalCount;
-
-
-    if (elements.eggCount)
-        elements.eggCount.textContent =
-            eggCount;
-
-
-    if (elements.homeDay)
-        elements.homeDay.textContent =
-            game.day;
-
-
-    if (elements.homeMonth)
-        elements.homeMonth.textContent =
-            game.month;
-
-
-    if (elements.homeMoney)
-        elements.homeMoney.textContent =
-            game.money;
-
-
-    if (elements.homeAnimalCount)
-        elements.homeAnimalCount.textContent =
-            animalCount;
-
-
-    if (elements.homeEggCount)
-        elements.homeEggCount.textContent =
-            eggCount;
-
-
-    if (elements.shopMoney)
-        elements.shopMoney.textContent =
-            game.money;
-
-
-    renderStatistics();
-
-}
-
-
-/* =========================================================
    PAGE NAVIGATION
 ========================================================= */
 
-function openPage(pageName) {
+function showPage(page) {
 
     const pages =
         document.querySelectorAll(
@@ -2467,30 +1875,30 @@ function openPage(pageName) {
 
 
     pages.forEach(
-        function(page) {
+        p => {
 
-            page.classList.remove(
+            p.classList.remove(
                 "active"
             );
 
-            page.style.display =
+            p.style.display =
                 "none";
 
         }
     );
 
 
-    const selected =
+    const target =
         document.getElementById(
-            pageName
+            page
         );
 
 
-    if (!selected) {
+    if (!target) {
 
         console.error(
-            "Page not found:",
-            pageName
+            "Page bestaat niet:",
+            page
         );
 
         return;
@@ -2498,93 +1906,163 @@ function openPage(pageName) {
     }
 
 
-    selected.classList.add(
+    target.classList.add(
         "active"
     );
 
-
-    selected.style.display =
+    target.style.display =
         "block";
 
 
     if (
-        pageName === "home"
-    ) {
-
+        page === "home"
+    )
         updateUI();
 
-    }
+
+    if (
+        page === "animals"
+    )
+        renderAnimals();
 
 
     if (
-        pageName === "animals"
-    ) {
-
-        renderFinalAnimals();
-
-    }
+        page === "shop"
+    )
+        renderShop();
 
 
     if (
-        pageName === "shop"
-    ) {
-
-        renderAnimalShop();
-
-    }
+        page === "breeding"
+    )
+        renderBreeding();
 
 
     if (
-        pageName === "breeding"
-    ) {
-
-        renderBreedingPage();
-
-    }
-
-
-    if (
-        pageName === "incubator"
-    ) {
-
-        renderMonthlyEggs();
-
-    }
-
-
-    if (
-        pageName === "market"
-    ) {
-
-        renderMarket();
-
-    }
-
-
-    if (
-        pageName === "statistics"
-    ) {
-
-        renderStatistics();
-
-    }
+        page === "incubator"
+    )
+        renderIncubator();
 
 }
 
 
 /* =========================================================
-   HOME NEXT MONTH BUTTON
+   UI
 ========================================================= */
 
-function goNextMonth() {
+function updateUI() {
 
-    nextMonth();
+    const values = {
+
+        day: game.day,
+
+        month: game.month,
+
+        money: game.money,
+
+        animalCount:
+            game.animals.length,
+
+        eggCount:
+            game.eggs.length,
+
+        homeDay:
+            game.day,
+
+        homeMonth:
+            game.month,
+
+        homeMoney:
+            game.money,
+
+        homeAnimalCount:
+            game.animals.length,
+
+        homeEggCount:
+            game.eggs.length
+
+    };
+
+
+    Object.entries(values)
+        .forEach(
+            ([id, value]) => {
+
+                const element =
+                    document.getElementById(
+                        id
+                    );
+
+                if (element)
+                    element.textContent =
+                        value;
+
+            }
+        );
 
 }
 
 
 /* =========================================================
-   BACKWARDS COMPATIBILITY
+   UPDATE EVERYTHING
+========================================================= */
+
+function updateEverything() {
+
+    updateUI();
+
+    renderAnimals();
+
+    renderShop();
+
+    renderBreeding();
+
+    renderIncubator();
+
+    renderMarket();
+
+}
+
+
+/* =========================================================
+   UTILS
+========================================================= */
+
+function safeId(text) {
+
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
+
+}
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[char]
+        );
+
+}
+
+function escapeJS(text) {
+
+    return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+
+}
+
+
+/* =========================================================
+   COMPATIBILITY
 ========================================================= */
 
 function nextDay() {
@@ -2594,170 +2072,22 @@ function nextDay() {
 }
 
 
-function updateFinalUI() {
-
-    updateUI();
-
-}
-
-
-function saveGameFinal() {
-
-    saveGame();
-
-}
-
-
-function renderIncubators() {
-
-    renderMonthlyEggs();
-
-}
-
-
-function renderMarket() {
-
-    const list =
-        document.getElementById(
-            "marketList"
-        );
-
-    if (!list) {
-        return;
-    }
-
-
-    list.innerHTML = "";
-
-
-    if (
-        game.animals.length === 0
-    ) {
-
-        list.innerHTML = `
-
-            <div class="empty-state">
-
-                🦎 Geen dieren beschikbaar.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    game.animals.forEach(
-        function(animal) {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "animal-card";
-
-
-            const base =
-                SPECIES[
-                    animal.species
-                ]?.price || 100;
-
-
-            let price =
-                Math.round(
-                    base * 0.6
-                );
-
-
-            if (
-                animal.morph !== "Normal"
-            ) {
-
-                price *= 2;
-
-            }
-
-
-            price =
-                Math.round(price);
-
-
-            card.innerHTML = `
-
-                <h3>
-                    🦎 ${animal.name}
-                </h3>
-
-                <p>
-                    ${animal.species}
-                </p>
-
-                <p>
-                    🧬 ${animal.morph}
-                </p>
-
-                <p>
-                    💰 €${price}
-                </p>
-
-                <button
-                    type="button"
-                    onclick="sellAnimal(${animal.id})"
-                >
-                    💰 Verkopen
-                </button>
-
-            `;
-
-
-            list.appendChild(card);
-
-        }
-    );
-
-}
-
-
 /* =========================================================
-   INITIALIZE
+   START GAME
 ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function() {
+    () => {
 
         loadGame();
 
-        updateUI();
+        updateEverything();
 
-        renderAnimalShop();
-
-        renderFinalAnimals();
-
-        renderMonthlyEggs();
-
-        renderStatistics();
-
-        openPage("home");
-
+        showPage("home");
 
         console.log(
             "🦎 Reptile Breeding Simulation loaded!"
-        );
-
-        console.log(
-            "Animals:",
-            game.animals.length
-        );
-
-        console.log(
-            "Money:",
-            game.money
         );
 
     }
