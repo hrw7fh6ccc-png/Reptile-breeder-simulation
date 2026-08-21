@@ -11071,3 +11071,550 @@ updateHomePage();
 console.log(
     "🧭 Part 16 - Navigation loaded!"
 );
+
+
+
+
+// ============================================
+// PART 17 - ANIMAL SHOP
+// ============================================
+
+
+// ============================================
+// SHOP ANIMALS
+// ============================================
+
+const shopAnimals = [
+
+    {
+        species: "Ball Python",
+        price: 150,
+        morphs: [
+            "Normal",
+            "Pastel",
+            "Mojave",
+            "Albino"
+        ]
+    },
+
+    {
+        species: "Leopard Gecko",
+        price: 100,
+        morphs: [
+            "Normal",
+            "Albino",
+            "Tangerine",
+            "Mack Snow"
+        ]
+    },
+
+    {
+        species: "Corn Snake",
+        price: 120,
+        morphs: [
+            "Normal",
+            "Amelanistic",
+            "Anery",
+            "Snow"
+        ]
+    },
+
+    {
+        species: "Bearded Dragon",
+        price: 200,
+        morphs: [
+            "Normal",
+            "Hypo",
+            "Citrus",
+            "Leatherback"
+        ]
+    },
+
+    {
+        species: "Crested Gecko",
+        price: 180,
+        morphs: [
+            "Normal",
+            "Flame",
+            "Harlequin",
+            "Dalmatian"
+        ]
+    },
+
+    {
+        species: "Gargoyle Gecko",
+        price: 220,
+        morphs: [
+            "Normal",
+            "Orange Stripe",
+            "Red Stripe"
+        ]
+    },
+
+    {
+        species: "African Fat-Tailed Gecko",
+        price: 170,
+        morphs: [
+            "Normal",
+            "Albino",
+            "Whiteout"
+        ]
+    },
+
+    {
+        species: "Red-Eared Slider",
+        price: 150,
+        morphs: [
+            "Normal",
+            "Hypo"
+        ]
+    },
+
+    {
+        species: "Panther Chameleon",
+        price: 350,
+        morphs: [
+            "Normal",
+            "Blue",
+            "Red"
+        ]
+    },
+
+    {
+        species: "Veiled Chameleon",
+        price: 250,
+        morphs: [
+            "Normal",
+            "Turquoise",
+            "Yellow"
+        ]
+    },
+
+    {
+        species: "Jackson's Chameleon",
+        price: 300,
+        morphs: [
+            "Normal",
+            "Green"
+        ]
+    },
+
+    {
+        species: "Reticulated Python",
+        price: 600,
+        morphs: [
+            "Normal",
+            "Albino",
+            "Tiger"
+        ]
+    },
+
+    {
+        species: "Green Anaconda",
+        price: 700,
+        morphs: [
+            "Normal"
+        ]
+    }
+
+];
+
+
+// ============================================
+// RANDOM CHOICE
+// ============================================
+
+function randomShopItem(array) {
+
+    return array[
+        Math.floor(
+            Math.random() * array.length
+        )
+    ];
+
+}
+
+
+// ============================================
+// CREATE SHOP
+// ============================================
+
+function renderAnimalShop() {
+
+    const shop =
+        document.getElementById(
+            "shopList"
+        );
+
+    if (!shop) {
+        return;
+    }
+
+    shop.innerHTML = "";
+
+
+    shopAnimals.forEach(
+        function(item, index) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "shop-animal-card";
+
+
+            card.innerHTML = `
+
+                <h3>
+                    🦎 ${item.species}
+                </h3>
+
+                <p>
+                    Beschikbare morphs:
+                </p>
+
+                <p>
+                    🧬
+                    ${item.morphs.join(", ")}
+                </p>
+
+                <div class="shop-price">
+                    💰 €${item.price}
+                </div>
+
+                <button
+                    class="buy-animal-button"
+                    onclick="buyShopAnimal(${index})"
+                >
+                    🛒 Koop ${item.species}
+                </button>
+
+            `;
+
+
+            shop.appendChild(card);
+
+        }
+    );
+
+
+    updateShopMoney();
+
+}
+
+
+// ============================================
+// BUY ANIMAL
+// ============================================
+
+function buyShopAnimal(index) {
+
+    const item =
+        shopAnimals[index];
+
+
+    if (!item) {
+        return;
+    }
+
+
+    // Check money
+
+    if (
+        game.money <
+        item.price
+    ) {
+
+        alert(
+            "❌ Je hebt niet genoeg geld!"
+        );
+
+        return;
+
+    }
+
+
+    // Random gender
+
+    const gender =
+        Math.random() < 0.5
+            ? "Male"
+            : "Female";
+
+
+    // Random morph
+
+    const morph =
+        randomShopItem(
+            item.morphs
+        );
+
+
+    // Create animal
+
+    const animal = {
+
+        id:
+            Date.now() +
+            Math.floor(
+                Math.random() * 100000
+            ),
+
+        name:
+            `${morph} ${item.species}`,
+
+        species:
+            item.species,
+
+        morph:
+            morph,
+
+        gender:
+            gender,
+
+        ageMonths:
+            0,
+
+        ageDays:
+            0,
+
+        health:
+            "Healthy",
+
+        foodLevel:
+            100,
+
+        waterLevel:
+            100,
+
+        isAdult:
+            false,
+
+        breedingCooldown:
+            0,
+
+        purchasePrice:
+            item.price,
+
+        birthMonth:
+            game.month || 1
+
+    };
+
+
+    // Pay
+
+    game.money -=
+        item.price;
+
+
+    // Add animal
+
+    game.animals.push(
+        animal
+    );
+
+
+    // Save
+
+    if (
+        typeof saveGameFinal ===
+        "function"
+    ) {
+
+        saveGameFinal();
+
+    }
+
+
+    // Update UI
+
+    updateShopMoney();
+
+    updateAnimalCounters();
+
+
+    if (
+        typeof renderFinalAnimals ===
+        "function"
+    ) {
+
+        renderFinalAnimals();
+
+    }
+
+
+    if (
+        typeof updateFinalUI ===
+        "function"
+    ) {
+
+        updateFinalUI();
+
+    }
+
+
+    // Message
+
+    const genderText =
+        gender === "Male"
+            ? "♂️ Mannetje"
+            : "♀️ Vrouwtje";
+
+
+    alert(
+
+        `🦎 Nieuw dier gekocht!\n\n` +
+
+        `${item.species}\n` +
+
+        `🧬 Morph: ${morph}\n` +
+
+        `${genderText}\n\n` +
+
+        `💰 Betaald: €${item.price}`
+
+    );
+
+}
+
+
+// ============================================
+// MONEY
+// ============================================
+
+function updateShopMoney() {
+
+    const element =
+        document.getElementById(
+            "shopMoney"
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        game.money || 0;
+
+}
+
+
+// ============================================
+// COUNTERS
+// ============================================
+
+function updateAnimalCounters() {
+
+    const animals =
+        game.animals
+            ? game.animals.length
+            : 0;
+
+
+    const eggs =
+        game.eggs
+            ? game.eggs.length
+            : 0;
+
+
+    const animalCount =
+        document.getElementById(
+            "animalCount"
+        );
+
+
+    const eggCount =
+        document.getElementById(
+            "eggCount"
+        );
+
+
+    const homeAnimals =
+        document.getElementById(
+            "homeAnimalCount"
+        );
+
+
+    const homeEggs =
+        document.getElementById(
+            "homeEggCount"
+        );
+
+
+    if (animalCount) {
+
+        animalCount.textContent =
+            animals;
+
+    }
+
+
+    if (eggCount) {
+
+        eggCount.textContent =
+            eggs;
+
+    }
+
+
+    if (homeAnimals) {
+
+        homeAnimals.textContent =
+            animals;
+
+    }
+
+
+    if (homeEggs) {
+
+        homeEggs.textContent =
+            eggs;
+
+    }
+
+}
+
+
+// ============================================
+// SHOP OPEN
+// ============================================
+
+function openAnimalShop() {
+
+    renderAnimalShop();
+
+    updateShopMoney();
+
+}
+
+
+// ============================================
+// LOAD SHOP
+// ============================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        renderAnimalShop();
+
+        updateShopMoney();
+
+        updateAnimalCounters();
+
+    }
+);
+
+
+// ============================================
+// PART 17 LOADED
+// ============================================
+
+console.log(
+    "🛒 Part 17 - Animal Shop loaded!"
+);
