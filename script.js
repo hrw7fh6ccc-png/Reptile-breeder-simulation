@@ -1,12 +1,8 @@
 // ============================================
 // REPTILE BREEDING SIMULATION
-// PART 3
+// PART 4 - GENETICS
 // ============================================
 
-
-// ============================================
-// GAME DATA
-// ============================================
 
 let game = {
 
@@ -17,6 +13,116 @@ let game = {
     animals: [],
 
     eggs: []
+
+};
+
+
+// ============================================
+// MORPH DATABASE
+// ============================================
+//
+// Allelen:
+//
+// AA = twee dominante allelen
+// Aa = één dominant + één recessief
+// aa = twee recessieve allelen
+//
+// Recessieve morphs worden pas zichtbaar
+// wanneer een dier twee kopieën heeft.
+//
+// ============================================
+
+const morphDatabase = {
+
+    "Ball Python": {
+
+        "Normal": {
+            genes: {
+                albino: ["A", "A"],
+                pastel: ["P", "P"]
+            }
+        },
+
+        "Pastel": {
+            genes: {
+                albino: ["A", "A"],
+                pastel: ["P", "p"]
+            }
+        },
+
+        "Albino": {
+            genes: {
+                albino: ["a", "a"],
+                pastel: ["P", "P"]
+            }
+        }
+
+    },
+
+
+    "Leopard Gecko": {
+
+        "Normal": {
+            genes: {
+                albino: ["A", "A"],
+                snow: ["S", "S"]
+            }
+        },
+
+        "Mack Snow": {
+            genes: {
+                albino: ["A", "A"],
+                snow: ["S", "s"]
+            }
+        },
+
+        "Albino": {
+            genes: {
+                albino: ["a", "a"],
+                snow: ["S", "S"]
+            }
+        }
+
+    },
+
+
+    "Corn Snake": {
+
+        "Normal": {
+            genes: {
+                amel: ["A", "A"]
+            }
+        },
+
+        "Amelanistic": {
+            genes: {
+                amel: ["a", "a"]
+            }
+        }
+
+    },
+
+
+    "Bearded Dragon": {
+
+        "Normal": {
+            genes: {
+                hypo: ["H", "H"]
+            }
+        }
+
+    },
+
+
+    "Crested Gecko": {
+
+        "Normal": {
+            genes: {
+                patternless: ["P", "P"]
+            }
+        }
+
+    }
 
 };
 
@@ -113,9 +219,7 @@ function loadGame() {
 
 
     if (!saved) {
-
         return;
-
     }
 
 
@@ -126,17 +230,33 @@ function loadGame() {
 
 
         if (!game.animals) {
-
             game.animals = [];
-
         }
 
 
         if (!game.eggs) {
-
             game.eggs = [];
-
         }
+
+
+        // Zorg dat oude dieren
+        // ook genetica krijgen.
+
+        game.animals.forEach(
+            animal => {
+
+                if (!animal.genes) {
+
+                    animal.genes =
+                        createGenes(
+                            animal.species,
+                            animal.morph
+                        );
+
+                }
+
+            }
+        );
 
     }
 
@@ -170,38 +290,35 @@ function saveGame() {
 
 
 // ============================================
-// NAVIGATION
+// CREATE GENES
 // ============================================
 
-function showPage(pageName) {
+function createGenes(
+    species,
+    morph
+) {
 
-    document
-        .querySelectorAll(".page")
-        .forEach(page => {
-
-            page.classList.remove(
-                "active"
-            );
-
-        });
+    const database =
+        morphDatabase[
+            species
+        ];
 
 
-    const page =
-        document.getElementById(
-            pageName
-        );
+    if (
+        database &&
+        database[morph]
+    ) {
 
-
-    if (page) {
-
-        page.classList.add(
-            "active"
+        return JSON.parse(
+            JSON.stringify(
+                database[morph].genes
+            )
         );
 
     }
 
 
-    updateUI();
+    return {};
 
 }
 
@@ -214,12 +331,9 @@ function nextDay() {
 
     game.day++;
 
-
     updateAnimalAges();
 
-
     saveGame();
-
 
     updateUI();
 
@@ -227,7 +341,7 @@ function nextDay() {
 
 
 // ============================================
-// AGE SYSTEM
+// AGE
 // ============================================
 
 function updateAnimalAges() {
@@ -270,6 +384,52 @@ function updateAnimalAges() {
 
 
 // ============================================
+// ADULT AGE
+// ============================================
+
+function getAdultAge(species) {
+
+    if (
+        species ===
+        "Ball Python"
+    ) {
+        return 18;
+    }
+
+    if (
+        species ===
+        "Leopard Gecko"
+    ) {
+        return 12;
+    }
+
+    if (
+        species ===
+        "Corn Snake"
+    ) {
+        return 18;
+    }
+
+    if (
+        species ===
+        "Bearded Dragon"
+    ) {
+        return 12;
+    }
+
+    if (
+        species ===
+        "Crested Gecko"
+    ) {
+        return 12;
+    }
+
+    return 12;
+
+}
+
+
+// ============================================
 // RANDOM SEX
 // ============================================
 
@@ -283,71 +443,12 @@ function randomSex() {
 
 
 // ============================================
-// ADULT AGE
-// ============================================
-
-function getAdultAge(species) {
-
-    if (
-        species ===
-        "Leopard Gecko"
-    ) {
-
-        return 12;
-
-    }
-
-
-    if (
-        species ===
-        "Ball Python"
-    ) {
-
-        return 18;
-
-    }
-
-
-    if (
-        species ===
-        "Corn Snake"
-    ) {
-
-        return 18;
-
-    }
-
-
-    if (
-        species ===
-        "Bearded Dragon"
-    ) {
-
-        return 12;
-
-    }
-
-
-    if (
-        species ===
-        "Crested Gecko"
-    ) {
-
-        return 12;
-
-    }
-
-
-    return 12;
-
-}
-
-
-// ============================================
 // BUY ANIMAL
 // ============================================
 
-function buyAnimal(shopIndex) {
+function buyAnimal(
+    shopIndex
+) {
 
     const item =
         shopAnimals[
@@ -356,9 +457,7 @@ function buyAnimal(shopIndex) {
 
 
     if (!item) {
-
         return;
-
     }
 
 
@@ -422,7 +521,13 @@ function buyAnimal(shopIndex) {
             "Healthy",
 
         purchasePrice:
-            item.price
+            item.price,
+
+        genes:
+            createGenes(
+                item.species,
+                item.morph
+            )
 
     };
 
@@ -447,7 +552,7 @@ function buyAnimal(shopIndex) {
 
 
 // ============================================
-// SHOP RENDER
+// SHOP
 // ============================================
 
 function renderShop() {
@@ -459,9 +564,7 @@ function renderShop() {
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -493,7 +596,8 @@ function renderShop() {
                 </h3>
 
                 <p>
-                    ${item.morph}
+                    Morph:
+                    <b>${item.morph}</b>
                 </p>
 
                 <p class="price">
@@ -501,7 +605,9 @@ function renderShop() {
                 </p>
 
                 <button
-                    onclick="buyAnimal(${index})"
+                    onclick="
+                        buyAnimal(${index})
+                    "
                 >
                     Kopen
                 </button>
@@ -531,9 +637,7 @@ function getAnimalIcon(
         species ===
         "Ball Python"
     ) {
-
         return "🐍";
-
     }
 
 
@@ -541,9 +645,7 @@ function getAnimalIcon(
         species ===
         "Corn Snake"
     ) {
-
         return "🐍";
-
     }
 
 
@@ -553,48 +655,128 @@ function getAnimalIcon(
 
 
 // ============================================
-// BREEDING STATUS
+// GENOTYPE TEXT
 // ============================================
 
-function getBreedingStatus(
-    animal
+function genotypeText(
+    alleles
 ) {
 
     if (
-        animal.health !==
-        "Healthy"
+        !alleles ||
+        alleles.length !== 2
     ) {
 
-        return {
-            text:
-                "Niet geschikt",
-            className:
-                "young"
-        };
+        return "Unknown";
+
+    }
+
+
+    return alleles.join("");
+
+}
+
+
+// ============================================
+// MORPH FROM GENES
+// ============================================
+
+function calculateVisibleMorph(
+    animal
+) {
+
+    const species =
+        animal.species;
+
+
+    const genes =
+        animal.genes || {};
+
+
+    if (
+        species ===
+        "Ball Python"
+    ) {
+
+        if (
+            genes.albino &&
+            genes.albino[0] === "a" &&
+            genes.albino[1] === "a"
+        ) {
+
+            return "Albino";
+
+        }
+
+
+        if (
+            genes.pastel &&
+            genes.pastel.includes("p")
+        ) {
+
+            return "Pastel";
+
+        }
+
+
+        return "Normal";
 
     }
 
 
     if (
-        !animal.isAdult
+        species ===
+        "Leopard Gecko"
     ) {
 
-        return {
-            text:
-                "Nog te jong",
-            className:
-                "young"
-        };
+        if (
+            genes.albino &&
+            genes.albino[0] === "a" &&
+            genes.albino[1] === "a"
+        ) {
+
+            return "Albino";
+
+        }
+
+
+        if (
+            genes.snow &&
+            genes.snow.includes("s")
+        ) {
+
+            return "Mack Snow";
+
+        }
+
+
+        return "Normal";
 
     }
 
 
-    return {
-        text:
-            "Breeding ready",
-        className:
-            "ready"
-    };
+    if (
+        species ===
+        "Corn Snake"
+    ) {
+
+        if (
+            genes.amel &&
+            genes.amel[0] === "a" &&
+            genes.amel[1] === "a"
+        ) {
+
+            return "Amelanistic";
+
+        }
+
+
+        return "Normal";
+
+    }
+
+
+    return animal.morph;
 
 }
 
@@ -612,9 +794,7 @@ function renderAnimals() {
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -652,12 +832,6 @@ function renderAnimals() {
     game.animals.forEach(
         (animal, index) => {
 
-            const status =
-                getBreedingStatus(
-                    animal
-                );
-
-
             const card =
                 document.createElement(
                     "div"
@@ -692,7 +866,9 @@ function renderAnimals() {
 
                 <p>
                     <b>Morph:</b>
-                    ${animal.morph}
+                    ${calculateVisibleMorph(
+                        animal
+                    )}
                 </p>
 
                 <p>
@@ -706,11 +882,9 @@ function renderAnimals() {
                     maanden
                 </p>
 
-                <span
-                    class="status ${status.className}"
-                >
-                    ${status.text}
-                </span>
+                <p>
+                    🧬 Genetica aanwezig
+                </p>
 
             `;
 
@@ -729,7 +903,9 @@ function renderAnimals() {
 // OPEN ANIMAL
 // ============================================
 
-function openAnimalModal(id) {
+function openAnimalModal(
+    id
+) {
 
     const animal =
         game.animals.find(
@@ -738,9 +914,7 @@ function openAnimalModal(id) {
 
 
     if (!animal) {
-
         return;
-
     }
 
 
@@ -750,10 +924,36 @@ function openAnimalModal(id) {
         );
 
 
-    const status =
-        getBreedingStatus(
-            animal
-        );
+    let genesHTML = "";
+
+
+    const genes =
+        animal.genes || {};
+
+
+    Object.keys(genes).forEach(
+        geneName => {
+
+            genesHTML += `
+
+                <div class="gene">
+
+                    <span>
+                        ${geneName}
+                    </span>
+
+                    <b>
+                        ${genotypeText(
+                            genes[geneName]
+                        )}
+                    </b>
+
+                </div>
+
+            `;
+
+        }
+    );
 
 
     details.innerHTML = `
@@ -784,10 +984,12 @@ function openAnimalModal(id) {
 
         <div class="detail-row">
             <span class="detail-title">
-                Morph
+                Visible Morph
             </span>
             <span>
-                ${animal.morph}
+                ${calculateVisibleMorph(
+                    animal
+                )}
             </span>
         </div>
 
@@ -814,15 +1016,6 @@ function openAnimalModal(id) {
 
         <div class="detail-row">
             <span class="detail-title">
-                Birth Day
-            </span>
-            <span>
-                Dag ${animal.birthDay}
-            </span>
-        </div>
-
-        <div class="detail-row">
-            <span class="detail-title">
                 Health
             </span>
             <span>
@@ -830,55 +1023,36 @@ function openAnimalModal(id) {
             </span>
         </div>
 
-        <div class="detail-row">
-            <span class="detail-title">
-                Adult
-            </span>
-            <span>
-                ${animal.isAdult
-                    ? "Ja"
-                    : "Nee"}
-            </span>
+        <div class="gene-box">
+
+            <h3>
+                🧬 Genotype
+            </h3>
+
+            ${genesHTML}
+
         </div>
 
-        <div class="detail-row">
-            <span class="detail-title">
-                Breeding
-            </span>
-            <span>
-                ${status.text}
-            </span>
-        </div>
+        <div class="card">
 
-        <div class="detail-row">
-            <span class="detail-title">
-                Adult vanaf
-            </span>
-            <span>
-                ${animal.adultAgeMonths}
-                maanden
-            </span>
-        </div>
+            <h3>
+                ℹ️ Genetica
+            </h3>
 
-        <div class="action-row">
+            <p>
+                A = dominante versie
+            </p>
 
-            <button
-                class="rename-button"
-                onclick="
-                    renameAnimal(${animal.id})
-                "
-            >
-                ✏️ Naam veranderen
-            </button>
+            <p>
+                a = recessieve versie
+            </p>
 
-            <button
-                class="sell-button"
-                onclick="
-                    sellAnimal(${animal.id})
-                "
-            >
-                💰 Verkopen
-            </button>
+            <p>
+                Bij recessieve morphs moet
+                een dier twee recessieve
+                allelen hebben om de morph
+                zichtbaar te maken.
+            </p>
 
         </div>
 
@@ -909,120 +1083,6 @@ function closeAnimalModal() {
         .classList.add(
             "hidden"
         );
-
-}
-
-
-// ============================================
-// RENAME
-// ============================================
-
-function renameAnimal(id) {
-
-    const animal =
-        game.animals.find(
-            a => a.id === id
-        );
-
-
-    if (!animal) {
-
-        return;
-
-    }
-
-
-    const newName =
-        prompt(
-            "Nieuwe naam:",
-            animal.name
-        );
-
-
-    if (
-        newName === null ||
-        newName.trim() === ""
-    ) {
-
-        return;
-
-    }
-
-
-    animal.name =
-        newName.trim();
-
-
-    saveGame();
-
-    updateUI();
-
-    openAnimalModal(
-        animal.id
-    );
-
-}
-
-
-// ============================================
-// SELL
-// ============================================
-
-function sellAnimal(id) {
-
-    const index =
-        game.animals.findIndex(
-            a => a.id === id
-        );
-
-
-    if (index === -1) {
-
-        return;
-
-    }
-
-
-    const animal =
-        game.animals[index];
-
-
-    const sellPrice =
-        Math.floor(
-            (animal.purchasePrice || 50)
-            * 0.7
-        );
-
-
-    const confirmed =
-        confirm(
-            `Verkoop ${animal.name} ` +
-            `voor €${sellPrice}?`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    game.money +=
-        sellPrice;
-
-
-    game.animals.splice(
-        index,
-        1
-    );
-
-
-    closeAnimalModal();
-
-    saveGame();
-
-    updateUI();
 
 }
 
@@ -1107,7 +1167,7 @@ function updateUI() {
 
 
 // ============================================
-// START GAME
+// START
 // ============================================
 
 loadGame();
