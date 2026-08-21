@@ -17,6 +17,7 @@
         <span>🗓️ Maand <b id="month">0</b></span>
         <span>💰 €<b id="money">1000</b></span>
         <span>🦎 Dieren <b id="animalCount">0</b></span>
+        <span>🥚 Eieren <b id="eggCount">0</b></span>
     </div>
 </header>
 
@@ -30,14 +31,17 @@
 
 <main>
 
+<!-- HOME -->
+
 <section id="home" class="page active">
 
     <div class="hero">
+
         <h2>Reptile Breeding Simulation</h2>
 
         <p>
-            Bouw je collectie en ontdek hoe
-            genetica je nakomelingen beïnvloedt.
+            Bouw je collectie, laat je dieren
+            opgroeien en fok je eigen morphs.
         </p>
 
         <button
@@ -46,26 +50,49 @@
         >
             ➡️ Volgende dag
         </button>
+
     </div>
 
     <div class="info-grid">
 
         <div class="card">
             <h3>📅 Tijd</h3>
-            <p>Dag: <b id="homeDay">1</b></p>
-            <p>Maand: <b id="homeMonth">0</b></p>
-            <p>28 dagen = 1 maand</p>
+
+            <p>
+                Dag:
+                <b id="homeDay">1</b>
+            </p>
+
+            <p>
+                Maand:
+                <b id="homeMonth">0</b>
+            </p>
+
+            <p>
+                28 dagen = 1 maand
+            </p>
         </div>
 
         <div class="card">
             <h3>🦎 Collectie</h3>
-            <p>Dieren: <b id="homeAnimalCount">0</b></p>
-            <p>Eieren: <b id="eggCount">0</b></p>
+
+            <p>
+                Dieren:
+                <b id="homeAnimalCount">0</b>
+            </p>
+
+            <p>
+                Eieren:
+                <b id="homeEggCount">0</b>
+            </p>
         </div>
 
         <div class="card">
             <h3>💰 Geld</h3>
-            <p>€<b id="homeMoney">1000</b></p>
+
+            <p>
+                €<b id="homeMoney">1000</b>
+            </p>
         </div>
 
     </div>
@@ -73,12 +100,14 @@
 </section>
 
 
+<!-- ANIMALS -->
+
 <section id="animals" class="page">
 
     <h2>🦎 Mijn dieren</h2>
 
     <p>
-        Klik op een dier om zijn genetica te bekijken.
+        Klik op een dier voor meer informatie.
     </p>
 
     <div
@@ -88,6 +117,8 @@
 
 </section>
 
+
+<!-- SHOP -->
 
 <section id="shop" class="page">
 
@@ -101,48 +132,97 @@
 </section>
 
 
+<!-- BREEDING -->
+
 <section id="breeding" class="page">
 
-    <h2>🧬 Breeding</h2>
+    <h2>🧬 Breeding Center</h2>
+
+    <div class="breeding-selection">
+
+        <div class="parent-box">
+
+            <h3>♂ Vader</h3>
+
+            <div id="maleSelection">
+                <p>
+                    Kies een mannetje.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="breeding-symbol">
+            ❤️
+        </div>
+
+
+        <div class="parent-box">
+
+            <h3>♀ Moeder</h3>
+
+            <div id="femaleSelection">
+                <p>
+                    Kies een vrouwtje.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
 
     <div class="card">
 
-        <h3>Genetics Lab</h3>
+        <h3>🐍 Kies je ouders</h3>
 
-        <p>
-            De genetica van je dieren wordt hier
-            voorbereid voor het breeding-systeem.
-        </p>
+        <div
+            id="breedingAnimals"
+            class="breeding-animal-list"
+        ></div>
 
-        <p>
-            Het echte koppelen van twee dieren
-            komt in Part 5.
-        </p>
+    </div>
+
+
+    <div class="card breeding-result">
+
+        <h3>🧬 Breeding Result</h3>
+
+        <div id="breedingMessage">
+            Kies eerst een mannetje en vrouwtje.
+        </div>
+
+        <button
+            id="breedButton"
+            onclick="startBreeding()"
+            disabled
+        >
+            🧬 Start Breeding
+        </button>
 
     </div>
 
 </section>
 
+
+<!-- INCUBATOR -->
 
 <section id="incubator" class="page">
 
     <h2>🥚 Incubator</h2>
 
-    <div class="card">
-
-        <h3>Egg Incubator</h3>
-
-        <p>
-            Actieve eieren:
-            <b id="incubatorEggs">0</b>
-        </p>
-
-    </div>
+    <div
+        id="eggList"
+        class="egg-grid"
+    ></div>
 
 </section>
 
 </main>
 
+
+<!-- ANIMAL MODAL -->
 
 <div
     id="animalModal"
